@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
     $("sidebar")?.classList.toggle("open");
   });
 
+  ensureToastBox();
   loadInit();
 });
 
@@ -42,6 +43,7 @@ function showPage(id) {
   }
 
   $("sidebar")?.classList.remove("open");
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 async function apiGet(action) {
@@ -49,6 +51,9 @@ async function apiGet(action) {
 
   const url = `${API_URL}?action=${encodeURIComponent(action)}&organizationId=${encodeURIComponent(ORG_ID)}`;
   const res = await fetch(url);
+
+  if (!res.ok) throw new Error(`API 讀取失敗：${res.status}`);
+
   return await res.json();
 }
 
@@ -69,12 +74,14 @@ async function apiPost(action, payload = {}) {
     })
   });
 
+  if (!res.ok) throw new Error(`API 寫入失敗：${res.status}`);
+
   return await res.json();
 }
 
 async function loadInit() {
   try {
-    setStatus("連線中...");
+    setStatus("讀取資料...", "");
 
     const data = await apiGet("init");
 
@@ -89,11 +96,12 @@ async function loadInit() {
       schedule: data.schedule || data.schedules || state.schedule || []
     };
 
-    setStatus("已連線", "ok");
+    setStatus("已同步", "ok");
   } catch (err) {
     console.error(err);
-    setStatus("離線展示模式", "err");
+    setStatus("離線展示", "err");
     seedDemo();
+    toast("離線展示模式", "目前使用示範資料，請確認 Apps Script 部署與權限。", "error");
   }
 
   renderAll();
@@ -223,8 +231,8 @@ function renderCases() {
         c.categoryName,
         c.title,
         c.address,
-        c.priority,
-        c.status
+        priorityBadge(c.priority),
+        statusBadge(c.status)
       ])
     );
   }
@@ -236,8 +244,9 @@ function renderCases() {
         c.caseNo,
         c.citizenName,
         c.categoryName,
-        c.status
-      ])
+        statusBadge(c.status)
+      ]),
+      true
     );
   }
 }
@@ -282,12 +291,13 @@ function renderSchedule() {
       s.startTime,
       s.title,
       s.location,
-      s.status
-    ])
+      statusBadge(s.status || "預定")
+    ]),
+    true
   );
 }
 
-function table(headers, rows) {
+function table(headers, rows, allowHtml = false) {
   return `
     <thead>
       <tr>
@@ -301,15 +311,70 @@ function table(headers, rows) {
               .map(
                 (r) => `
                   <tr>
-                    ${r.map((v) => `<td>${esc(v || "")}</td>`).join("")}
+                    ${r
+                      .map((v) => `<td>${allowHtml ? String(v || "") : esc(v || "")}</td>`)
+                      .join("")}
                   </tr>
                 `
               )
               .join("")
-          : `<tr><td colspan="${headers.length}">目前尚無資料</td></tr>`
+          : emptyRow(headers.length)
       }
     </tbody>
   `;
+}
+
+function emptyRow(colspan) {
+  return `
+    <tr>
+      <td colspan="${colspan}">
+        <div class="emptyState">
+          <b>目前尚無資料</b>
+          <span>新增第一筆資料後，會顯示在這裡。</span>
+        </div>
+      </td>
+    </tr>
+  `;
+}
+
+function statusBadge(status = "") {
+  const s = String(status || "待受理");
+
+  let cls = "badge gray";
+  let icon = "○";
+
+  if (s.includes("完成") || s.includes("結案")) {
+    cls = "badge green";
+    icon = "●";
+  } else if (s.includes("處理")) {
+    cls = "badge yellow";
+    icon = "●";
+  } else if (s.includes("待")) {
+    cls = "badge gray";
+    icon = "●";
+  } else if (s.includes("取消")) {
+    cls = "badge red";
+    icon = "●";
+  } else if (s.includes("預定")) {
+    cls = "badge blue";
+    icon = "●";
+  }
+
+  return `<span class="${cls}">${icon} ${esc(s)}</span>`;
+}
+
+function priorityBadge(priority = "") {
+  const p = String(priority || "一般");
+
+  if (p.includes("非常")) {
+    return `<span class="badge red">● 非常急</span>`;
+  }
+
+  if (p.includes("急")) {
+    return `<span class="badge orange">● 急件</span>`;
+  }
+
+  return `<span class="badge gray">● 一般</span>`;
 }
 
 function esc(v) {
@@ -337,11 +402,13 @@ async function createCase() {
   };
 
   if (!payload.citizenName && !payload.content) {
-    alert("請至少輸入民眾姓名或案件內容");
+    toast("缺少資料", "請至少輸入民眾姓名或案件內容。", "error");
     return;
   }
 
   try {
+    toast("建立中", "正在新增服務案件...", "info");
+
     const res = await apiPost("createCase", payload);
 
     if (!res.ok) {
@@ -350,9 +417,9 @@ async function createCase() {
 
     await loadInit();
     clearCaseForm();
-    alert("新增成功");
+    toast("建立成功", "服務案件已新增。", "success");
   } catch (err) {
-    alert("新增失敗：" + err.message);
+    toast("新增失敗", err.message, "error");
   }
 }
 
@@ -366,13 +433,11 @@ async function runAIFiling(autoCreateCase = true) {
   const rawContent = $("aiInput")?.value.trim() || "";
 
   if (!rawContent) {
-    alert("請先輸入民眾陳情內容");
+    toast("缺少內容", "請先輸入民眾陳情內容。", "error");
     return;
   }
 
-  if ($("aiResult")) {
-    $("aiResult").textContent = "分析中...";
-  }
+  showAILoading();
 
   try {
     const res = await apiPost("aiFiling", {
@@ -384,16 +449,79 @@ async function runAIFiling(autoCreateCase = true) {
       throw new Error(res.message || "AI 歸檔失敗");
     }
 
-    if ($("aiResult")) {
-      $("aiResult").textContent = JSON.stringify(res, null, 2);
-    }
-
+    renderAIResult(res);
     await loadInit();
+
+    toast(
+      autoCreateCase ? "AI 已建案" : "AI 分析完成",
+      autoCreateCase ? "案件已建立並完成歸檔。" : "分析結果已產生。",
+      "success"
+    );
   } catch (err) {
     if ($("aiResult")) {
       $("aiResult").textContent = "失敗：" + err.message;
     }
+
+    toast("AI 歸檔失敗", err.message, "error");
   }
+}
+
+function showAILoading() {
+  if (!$("aiResult")) return;
+
+  $("aiResult").textContent = `
+🤖 AI 正在分析案件...
+
+━━━━━━━━━━━━━━━━━━━━
+
+✓ 讀取民眾陳情內容
+✓ 判斷案件分類
+✓ 擷取地點與里別
+✓ 研判急迫程度
+✓ 建立案件摘要
+
+━━━━━━━━━━━━━━━━━━━━
+`;
+}
+
+function renderAIResult(res) {
+  if (!$("aiResult")) return;
+
+  const a = res.analysis || {};
+  const c = res.case || {};
+  const mode = res.mode || "local-rule";
+
+  $("aiResult").textContent = `
+🤖 AI 快速歸檔完成
+
+━━━━━━━━━━━━━━━━━━━━
+
+分析模式：
+${mode === "gemini" ? "Gemini AI" : "本機規則"}
+
+案件標題：
+${a.title || c.title || "未提供"}
+
+案件分類：
+${a.categoryName || c.categoryName || "一般陳情"}
+
+案件摘要：
+${a.summary || c.summary || c.content || "未提供"}
+
+案件地址：
+${a.address || c.address || "待補地址"}
+
+急迫程度：
+${a.priority || c.priority || "一般"}
+
+建議承辦：
+${a.departmentName || c.departmentName || "待確認"}
+
+案件編號：
+${c.caseNo || "尚未建立案件"}
+
+━━━━━━━━━━━━━━━━━━━━
+`;
 }
 
 async function createVisit() {
@@ -411,9 +539,9 @@ async function createVisit() {
     }
 
     await loadInit();
-    alert("拜訪紀錄已新增");
+    toast("新增成功", "拜訪紀錄已新增。", "success");
   } catch (err) {
-    alert(err.message);
+    toast("新增失敗", err.message, "error");
   }
 }
 
@@ -432,8 +560,52 @@ async function createSchedule() {
     }
 
     await loadInit();
-    alert("行程已新增");
+    toast("新增成功", "行程已新增。", "success");
   } catch (err) {
-    alert(err.message);
+    toast("新增失敗", err.message, "error");
   }
+}
+
+function copyDashboardAiToMain() {
+  const quick = $("dashboardAiInput");
+  const ai = $("aiInput");
+
+  if (!quick || !ai) return;
+
+  if (!quick.value.trim()) {
+    toast("缺少內容", "請先輸入電話紀錄或民眾陳情內容。", "error");
+    return;
+  }
+
+  ai.value = quick.value;
+  showPage("ai");
+  ai.focus();
+}
+
+function ensureToastBox() {
+  if ($("toastBox")) return;
+
+  const box = document.createElement("div");
+  box.id = "toastBox";
+  box.className = "toastBox";
+  document.body.appendChild(box);
+}
+
+function toast(title, message = "", type = "info") {
+  ensureToastBox();
+
+  const item = document.createElement("div");
+  item.className = "toast " + type;
+
+  item.innerHTML = `
+    <b>${esc(title)}</b>
+    <span>${esc(message)}</span>
+  `;
+
+  $("toastBox").appendChild(item);
+
+  setTimeout(() => {
+    item.classList.add("hide");
+    setTimeout(() => item.remove(), 260);
+  }, 2800);
 }
