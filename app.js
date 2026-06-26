@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbxDde0a_OXnFPEXP4NosHMislG6XKBgS11r3mwRJCPJ0wH31P1V_5bPKOVmB6WlQiZY/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwghaXnJlNbljeHIlaND-D6VJ9a52WODhd1cCs4NFuMBoEpX_NYu0SDbmlQTFyPOsvD/exec";
 const ORG_ID = "ORG-JZG";
 
 const $ = (id) => document.getElementById(id);
