@@ -16,26 +16,21 @@
           src="assets/logo.jpg"
           alt="江肇國服務團隊 Logo"
           onerror="
-            if(this.src.includes('logo.jpg')){
-              this.src='assets/logo.jpeg';
-            }else if(this.src.includes('logo.jpeg')){
-              this.src='assets/logo.png';
-            }else{
-              this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22 viewBox=%220 0 120 120%22><rect width=%22120%22 height=%22120%22 rx=%2228%22 fill=%22%230B6B43%22/><path d=%22M60 18L96 34V58C96 82 81 101 60 108C39 101 24 82 24 58V34L60 18Z%22 fill=%22white%22/><path d=%22M43 64C47 46 62 40 78 38C76 59 64 76 43 82C48 70 56 60 67 52C56 56 48 61 43 64Z%22 fill=%22%230B6B43%22/></svg>';
-            }
+            if(this.src.includes('logo.jpg')) this.src='assets/logo.jpeg';
+            else if(this.src.includes('logo.jpeg')) this.src='assets/logo.png';
+            else this.style.display='none';
           "
         />
-
         <div>
-          <strong id="brandName">江肇國服務團隊</strong>
-          <span>Service Case AI</span>
+          <strong id="brandName">江肇國</strong>
+          <span>Service Platform</span>
         </div>
       </div>
 
       <nav class="navList">
-        <button class="nav active" data-page="dashboard">首頁儀表板</button>
+        <button class="nav active" data-page="dashboard">首頁</button>
         <button class="nav" data-page="cases">服務案件</button>
-        <button class="nav" data-page="ai">AI 快速歸檔</button>
+        <button class="nav" data-page="ai">AI 歸檔</button>
         <button class="nav" data-page="citizens">民眾 CRM</button>
         <button class="nav" data-page="visits">外勤拜訪</button>
         <button class="nav" data-page="schedule">今日行程</button>
@@ -44,9 +39,9 @@
       </nav>
 
       <div class="sideCard">
-        <span>江肇國服務團隊</span>
-        <b>做事的人</b>
-        <p>讓每一件民眾服務案件，都能被記錄、追蹤、回覆與結案。</p>
+        <span>今日待辦</span>
+        <b>4 項任務</b>
+        <p>會勘追蹤、民眾回覆、外勤拜訪、案件結案。</p>
       </div>
     </aside>
 
@@ -55,8 +50,8 @@
         <button class="menuBtn" id="menuBtn">☰</button>
 
         <div>
-          <h1 id="pageTitle">首頁儀表板</h1>
-          <p>接電話 → 輸入重點 → AI 歸檔 → 一鍵建案 → 後續追蹤</p>
+          <h1 id="pageTitle">首頁</h1>
+          <p>案件追蹤、AI 歸檔、民眾 CRM 與外勤服務，一站式管理。</p>
         </div>
 
         <div class="topActions">
@@ -66,69 +61,52 @@
       </header>
 
       <section id="dashboard" class="page active">
-        <section class="hero">
-          <div class="heroText">
-            <span class="eyebrow">Smart Service Platform</span>
-            <h2>服務案件智慧管理平台</h2>
-            <p>
-              為每個政治服務團隊打造專屬、獨立、安全的案件管理系統。
-              從電話紀錄、民眾陳情、外勤拜訪到案件追蹤，一站式完成。
-            </p>
-
-            <div class="heroBtns">
-              <button onclick="showPage('cases')">新增服務案件</button>
-              <button class="ghost" onclick="showPage('ai')">AI 快速歸檔</button>
-            </div>
-          </div>
-
-          <div class="heroVisual">
-            <img
-              src="assets/banner.jpg"
-              alt="服務案件智慧管理平台 Banner"
-              onerror="
-                if(this.src.includes('banner.jpg')){
-                  this.src='assets/banner.jpeg';
-                }else if(this.src.includes('banner.jpeg')){
-                  this.src='assets/banner.png';
-                }else{
-                  this.outerHTML='<div style=&quot;height:100%;min-height:280px;display:flex;align-items:center;justify-content:center;text-align:center;padding:30px;color:#0B6B43;font-weight:900;background:linear-gradient(135deg,#fff,#EAF6EF);&quot;>請將主視覺圖片命名為<br>assets/banner.jpg / banner.jpeg / banner.png</div>';
-                }
-              "
-            />
-          </div>
+        <section class="bannerHero">
+          <img
+            src="assets/banner.jpg"
+            alt="服務案件智慧管理平台 Banner"
+            onerror="
+              if(this.src.includes('banner.jpg')) this.src='assets/banner.jpeg';
+              else if(this.src.includes('banner.jpeg')) this.src='assets/banner.png';
+              else this.outerHTML='<div class=&quot;bannerFallback&quot;>請放入 assets/banner.jpg / banner.jpeg / banner.png</div>';
+            "
+          />
         </section>
 
-        <div class="statsGrid">
+        <section class="statsGrid">
           <div class="statCard accent">
             <span>總服務案件</span>
             <b id="totalCases">0</b>
             <small>累計案件資料</small>
           </div>
+
           <div class="statCard">
             <span>今日新增</span>
             <b id="todayCases">0</b>
             <small>今日民眾服務</small>
           </div>
+
           <div class="statCard">
             <span>處理中</span>
             <b id="processingCases">0</b>
             <small>尚待追蹤案件</small>
           </div>
+
           <div class="statCard">
             <span>AI 已歸檔</span>
             <b id="aiFiledCases">0</b>
             <small>AI 協助整理</small>
           </div>
-        </div>
+        </section>
 
-        <div class="gridTwo">
-          <div class="panel">
+        <section class="dashboardGrid">
+          <div class="panel recentPanel">
             <div class="panelHead">
               <div>
                 <h3>最近服務案件</h3>
-                <p>快速掌握最新民眾陳情與處理狀態。</p>
+                <p>最新民眾陳情與處理狀態。</p>
               </div>
-              <button class="ghost small" onclick="showPage('cases')">查看全部</button>
+              <button class="ghost small" onclick="showPage('cases')">全部案件</button>
             </div>
 
             <div class="tableWrap">
@@ -136,23 +114,59 @@
             </div>
           </div>
 
-          <div class="panel aiPreview">
-            <span class="eyebrow">AI Filing</span>
-            <h3>服務處接電話，也能快速建案</h3>
-            <p>
-              只要把民眾說的話貼進來，系統會自動判斷分類、地點、急迫程度與建議承辦單位。
-            </p>
-
-            <div class="flow">
-              <span>電話紀錄</span>
-              <span>AI 分類</span>
-              <span>案件摘要</span>
-              <span>一鍵建案</span>
+          <div class="panel quickAiPanel">
+            <div class="panelHead">
+              <div>
+                <h3>AI 快速歸檔</h3>
+                <p>貼上電話紀錄，快速整理成案件。</p>
+              </div>
             </div>
 
-            <button onclick="showPage('ai')">開始 AI 快速歸檔</button>
+            <textarea
+              id="dashboardAiInput"
+              placeholder="例：和平里東興路一段附近，水溝蓋壞掉，車子經過很危險，希望協助處理。"
+            ></textarea>
+
+            <div class="actions">
+              <button onclick="copyDashboardAiToMain()">開始分析</button>
+              <button class="ghost" onclick="showPage('ai')">進入 AI 工作區</button>
+            </div>
           </div>
-        </div>
+        </section>
+
+        <section class="workGrid">
+          <div class="panel">
+            <div class="panelHead">
+              <div>
+                <h3>今日待辦</h3>
+                <p>服務處今日優先處理事項。</p>
+              </div>
+            </div>
+
+            <div class="todoList">
+              <div><b>會勘追蹤</b><span>東興路水溝蓋破損</span></div>
+              <div><b>民眾回覆</b><span>和平里路燈改善進度</span></div>
+              <div><b>外勤拜訪</b><span>社區主委關懷訪視</span></div>
+              <div><b>案件結案</b><span>五權路違停協調完成</span></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panelHead">
+              <div>
+                <h3>快速功能</h3>
+                <p>常用操作入口。</p>
+              </div>
+            </div>
+
+            <div class="quickGrid">
+              <button onclick="showPage('cases')">新增案件</button>
+              <button onclick="showPage('ai')">AI 歸檔</button>
+              <button onclick="showPage('visits')">外勤紀錄</button>
+              <button onclick="showPage('schedule')">新增行程</button>
+            </div>
+          </div>
+        </section>
       </section>
 
       <section id="cases" class="page">
@@ -193,6 +207,7 @@
               <p>所有服務案件的追蹤紀錄。</p>
             </div>
           </div>
+
           <div class="tableWrap">
             <table id="caseTable"></table>
           </div>
@@ -249,6 +264,7 @@
               <p>讓服務團隊知道每位民眾曾經反映過哪些問題。</p>
             </div>
           </div>
+
           <div class="tableWrap">
             <table id="citizenTable"></table>
           </div>
@@ -323,7 +339,7 @@
         <div class="pageHero compact">
           <span class="eyebrow">Dedicated Workspace</span>
           <h2>專屬團隊獨立系統</h2>
-          <p>不是提供一套共用系統，而是為每一個政治服務團隊打造專屬的智慧服務管理平台。</p>
+          <p>為每一個政治服務團隊打造專屬的智慧服務管理平台。</p>
         </div>
 
         <div class="featureGrid">
@@ -384,5 +400,17 @@
   </div>
 
   <script src="app.js"></script>
+  <script>
+    function copyDashboardAiToMain(){
+      const quickInput = document.getElementById("dashboardAiInput");
+      const aiInput = document.getElementById("aiInput");
+
+      if(aiInput && quickInput){
+        aiInput.value = quickInput.value;
+      }
+
+      showPage("ai");
+    }
+  </script>
 </body>
 </html>
