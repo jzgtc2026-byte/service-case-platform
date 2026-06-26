@@ -1,4 +1,4 @@
-const API_URL = ""; // 貼上 Apps Script Web App URL，例如 https://script.google.com/macros/s/xxxx/exec
+const API_URL = "https://script.google.com/macros/s/AKfycbxDde0a_OXnFPEXP4NosHMislG6XKBgS11r3mwRJCPJ0wH31P1V_5bPKOVmB6WlQiZY/exec";
 const ORG_ID = "ORG-JZG";
 
 let state = { cases: [], citizens: [], categories: [], departments: [], visits: [], schedule: [], dashboard: {} };
