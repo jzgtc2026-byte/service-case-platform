@@ -1,6 +1,3024 @@
-下面整份覆蓋 `style.css`。
+ChatGPT Plus
 
-```css
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+已產生圖像：智能服務案件管理平台展示
+
+
+編輯
+
+
+已產生圖像：AI 快速歸檔系統介面
+
+
+編輯
+
+
+你幫我用這個生成程式 介面要插入要用的圖片
+之後我儲存 你後面就可以幫我做 還有我需要的程式麻煩 感應手機要響應式
+
+電腦要感應是電腦在用
+
+已產生圖像：江肇國服務案件管理平台展示
+
+
+編輯
+
+
+你幫我 去掉挺台灣 然後左上角那個logo先幫我做 然後才是你主要banner的一張
+
+第一張先來
+
+已產生圖像：江肇國服務團隊標誌
+
+
+編輯
+
+
+再來需要的第二張
+
+已產生圖像：江肇國服務案件智慧管理平台
+
+
+編輯
+
+
+太複雜了 這個沒辦法吧  我只需要服務案件智慧管理平台
+下面一段標語 加上他的人像
+
+已產生圖像：服務案件智慧管理平台宣傳海報
+
+
+編輯
+
+
+38B43BFC-D7B1-4E6C-82CE-6D74A99C5DD8.jpeg
+704C09D2-6CCA-4F0A-9753-46B152CB785B.jpeg
+那就設計吧
+
+已產生圖像：服務案件智慧管理平台宣傳圖
+
+
+編輯
+
+
+BF931FC0-3475-494C-A34B-009ED594198B.jpeg
+DF4646DF-A251-4F5D-9C21-EC6D7B40E0B0.jpeg
+我是說要做一個系統 然後我會導入這兩張圖片
+現在開始馬上幫我設計程式 給我越完整越好的 
+我想要儘量做到接近一次到位
+
+
+Pasted code(19).js
+JavaScript
+這友問題
+
+如果這是你之後要持續開發、也可能賣給不同政治人物服務團隊，我建議 GitHub Repository 名稱不要放「江肇國」，而是用產品名稱。
+
+以下是我推薦的命名：
+
+⭐ 最推薦（專業、容易擴充）
+smart-case-platform
+或
+
+service-case-platform
+AI 特色
+ai-case-platform
+smart-service-platform
+ai-service-platform
+SaaS 產品定位
+civic-service-platform
+smart-civic-platform
+case-management-platform
+service-case-management
+如果品牌就是「服務案件智慧管理平台」
+smart-case-management-system
+或
+
+smart-case-management-platform
+我最推薦你用
+smart-case-management-platform
+原因：
+
+一看就知道是智慧案件管理平台。
+
+未來可以給議員、立委、里長、政府機關、企業客服都使用。
+
+不綁特定政治人物，方便做成 SaaS。
+
+GitHub、Vercel、網域命名都很好延伸。
+
+例如：
+
+GitHub
+smart-case-management-platform
+
+Vercel
+smart-case-management-platform.vercel.app
+
+網域
+smartcase.tw
+caseai.tw
+這樣未來產品品牌會更完整，也更容易對外展示與推廣。
+
+
+這要修正嗎const API_URL = "https://script.google.com/macros/s/AKfycbxDde0a_OXnFPEXP4NosHMislG6XKBgS11r3mwRJCPJ0wH31P1V_5bPKOVmB6WlQiZY/exec";
+const ORG_ID = "ORG-JZG";
+
+let state = { cases: [], citizens: [], categories: [], departments: [], visits: [], schedule: [], dashboard: {} };
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".nav").forEach(btn => btn.addEventListener("click", () => showPage(btn.dataset.page)));
+  document.getElementById("menuBtn").addEventListener("click", () => document.getElementById("sidebar").classList.toggle("open"));
+  loadInit();
+});
+
+function showPage(id) {
+  document.querySelectorAll(".nav").forEach(n => n.classList.toggle("active", n.dataset.page === id));
+  document.querySelectorAll(".page").forEach(p => p.classList.toggle("active", p.id === id));
+  document.getElementById("pageTitle").textContent = document.querySelector(.nav[data-page="${id}"]).textContent.replace(/[^\u4e00-\u9fa5A-Za-z]/g,"").trim();
+  document.getElementById("sidebar").classList.remove("open");
+}
+
+async function apiGet(action) {
+  if (!API_URL) throw new Error("尚未設定 API_URL");
+  const res = await fetch(${API_URL}?action=${encodeURIComponent(action)}&organizationId=${encodeURIComponent(ORG_ID)});
+  return await res.json();
+}
+
+async function apiPost(action, payload = {}) {
+  if (!API_URL) throw new Error("尚未設定 API_URL");
+  const res = await fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify({ action, payload: { organizationId: ORG_ID, ...payload } })
+  });
+  return await res.json();
+}
+
+async function loadInit() {
+  try {
+    setStatus("連線中...");
+    const data = await apiGet("init");
+    if (!data.ok) throw new Error(data.message || "讀取失敗");
+    state = { ...state, ...data };
+    setStatus("已連線", "ok");
+  } catch (err) {
+    setStatus("離線展示模式", "err");
+    seedDemo();
+  }
+  renderAll();
+}
+
+function seedDemo() {
+  state.dashboard = { totalCases: 3, todayCases: 1, processingCases: 2, aiFiledCases: 1 };
+  state.categories = [{categoryName:"道路"},{categoryName:"排水"},{categoryName:"路燈"},{categoryName:"交通"},{categoryName:"環境"},{categoryName:"社福"}];
+  state.cases = [
+    {caseNo:"CASE-001", citizenName:"王先生", categoryName:"排水", title:"水溝蓋破損", address:"東興路一段附近", priority:"急件", status:"處理中"},
+    {caseNo:"CASE-002", citizenName:"李小姐", categoryName:"路燈", title:"路燈不亮", address:"和平里", priority:"一般", status:"待受理"},
+    {caseNo:"CASE-003", citizenName:"陳先生", categoryName:"交通", title:"違停嚴重", address:"五權路", priority:"一般", status:"已完成"}
+  ];
+  state.citizens = [{name:"王先生", phone:"0912xxx", address:"東興路", caseCount:1},{name:"李小姐", phone:"0922xxx", address:"和平里", caseCount:1}];
+  state.visits = [];
+  state.schedule = [];
+}
+
+function setStatus(text, cls = "") {
+  const el = document.getElementById("apiStatus");
+  el.textContent = text;
+  el.className = "apiStatus " + cls;
+}
+
+function renderAll() {
+  const org = state.organization || {};
+  if (org.organizationName) document.getElementById("brandName").textContent = org.organizationName;
+  const d = state.dashboard || state.stats || {};
+  totalCases.textContent = d.totalCases || d.total || state.cases.length || 0;
+  todayCases.textContent = d.todayCases || 0;
+  processingCases.textContent = d.processingCases || 0;
+  aiFiledCases.textContent = d.aiFiledCases || d.aiFiled || 0;
+  renderCategories();
+  renderCases();
+  renderCitizens();
+  renderVisits();
+  renderSchedule();
+}
+
+function renderCategories() {
+  const sel = document.getElementById("caseCategory");
+  sel.innerHTML = (state.categories || []).map(c => <option>${esc(c.categoryName)}</option>).join("") || "<option>一般陳情</option>";
+}
+
+function renderCases() {
+  const rows = (state.cases || []).slice().reverse();
+  const html = table(["編號","民眾","分類","標題","地址","急迫","狀態"], rows.map(c => [c.caseNo,c.citizenName,c.categoryName,c.title,c.address,c.priority,c.status]));
+  caseTable.innerHTML = html;
+  recentCases.innerHTML = table(["編號","民眾","分類","狀態"], rows.slice(0,6).map(c => [c.caseNo,c.citizenName,c.categoryName,c.status]));
+}
+
+function renderCitizens() {
+  citizenTable.innerHTML = table(["姓名","電話","地址","里別","案件數"], (state.citizens || []).map(c => [c.name,c.phone,c.address,c.village,c.caseCount]));
+}
+
+function renderVisits() {
+  visitTable.innerHTML = table(["日期","對象","地址","里別","內容"], (state.visits || []).map(v => [v.visitDate,v.citizenName,v.address,v.village,v.summary || v.content]));
+}
+
+function renderSchedule() {
+  scheduleTable.innerHTML = table(["日期","時間","標題","地點","狀態"], (state.schedule || []).map(s => [s.startDate,s.startTime,s.title,s.location,s.status]));
+}
+
+function table(headers, rows) {
+  return <thead><tr>${headers.map(h=><th>${h}</th>).join("")}</tr></thead><tbody>${rows.map(r=><tr>${r.map(v=><td>${esc(v||"")}</td>).join("")}</tr>).join("")}</tbody>;
+}
+
+function esc(v) {
+  return String(v ?? "").replace(/[&<>"']/g, m => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
+}
+
+async function createCase() {
+  const payload = {
+    citizenName: caseName.value, phone: casePhone.value, categoryName: caseCategory.value,
+    priority: casePriority.value, address: caseAddress.value, village: caseVillage.value,
+    content: caseContent.value, title: ${caseCategory.value}｜${caseContent.value.slice(0,18)}
+  };
+  try {
+    const res = await apiPost("createCase", payload);
+    if (!res.ok) throw new Error(res.message);
+    state.cases.push(res.case);
+    await loadInit();
+    alert("新增成功");
+  } catch (err) {
+    alert("新增失敗：" + err.message);
+  }
+}
+
+async function runAIFiling(autoCreateCase = true) {
+  const rawContent = aiInput.value.trim();
+  if (!rawContent) return alert("請先輸入民眾陳情內容");
+  aiResult.textContent = "分析中...";
+  try {
+    const res = await apiPost("aiFiling", { rawContent, autoCreateCase });
+    if (!res.ok) throw new Error(res.message);
+    aiResult.textContent = JSON.stringify(res, null, 2);
+    await loadInit();
+  } catch (err) {
+    aiResult.textContent = "失敗：" + err.message;
+  }
+}
+
+async function createVisit() {
+  try {
+    const res = await apiPost("createVisit", {
+      citizenName: visitName.value, address: visitAddress.value, village: visitVillage.value,
+      content: visitContent.value, summary: visitContent.value
+    });
+    if (!res.ok) throw new Error(res.message);
+    await loadInit();
+    alert("拜訪紀錄已新增");
+  } catch (err) { alert(err.message); }
+}
+
+async function createSchedule() {
+  try {
+    const res = await apiPost("createSchedule", {
+      title: schTitle.value, startDate: schDate.value, startTime: schTime.value, location: schLocation.value
+    });
+    if (!res.ok) throw new Error(res.message);
+    await loadInit();
+    alert("行程已新增");
+  } catch (err) { alert(err.message); }
+}
+
+已思考 6s
+要小修，但不用大改。
+
+你這份主要有 3 個風險：
+
+直接用 totalCases.textContent 這種寫法不穩
+有些瀏覽器不一定會把 id="totalCases" 自動變成變數。
+
+如果某個 HTML 元素不存在，整個 JS 會中斷
+例如 menuBtn、sidebar、caseTable 其中一個沒寫到就會壞。
+
+Apps Script 重新部署後，API_URL 要換成最新 /exec
+你現在這個可以先保留，但如果後端有重新部署，要更新。
+
+最需要改的是這些地方：
+
+const $ = (id) => document.getElementById(id);
+然後把這種：
+
+totalCases.textContent = d.totalCases || 0;
+改成：
+
+$("totalCases").textContent = d.totalCases || 0;
+另外這行也要加保護：
+
+document.getElementById("menuBtn").addEventListener(...)
+改成：
+
+$("menuBtn")?.addEventListener("click", () => $("sidebar")?.classList.toggle("open"));
+你這份邏輯方向是對的，不是壞掉。
+但我會建議我下一步直接幫你整理成一份「可直接覆蓋的完整 app.js」，避免你一段一段改又貼錯。
+
+
+好
+
+已思考 2 秒鐘
+好，下面這份是可直接覆蓋的完整 app.js。
+
+const API_URL = "https://script.google.com/macros/s/AKfycbxDde0a_OXnFPEXP4NosHMislG6XKBgS11r3mwRJCPJ0wH31P1V_5bPKOVmB6WlQiZY/exec";
+const ORG_ID = "ORG-JZG";
+
+const $ = (id) => document.getElementById(id);
+
+let state = {
+  cases: [],
+  citizens: [],
+  categories: [],
+  departments: [],
+  visits: [],
+  schedule: [],
+  dashboard: {}
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".nav").forEach((btn) => {
+    btn.addEventListener("click", () => showPage(btn.dataset.page));
+  });
+
+  $("menuBtn")?.addEventListener("click", () => {
+    $("sidebar")?.classList.toggle("open");
+  });
+
+  loadInit();
+});
+
+function showPage(id) {
+  document.querySelectorAll(".nav").forEach((n) => {
+    n.classList.toggle("active", n.dataset.page === id);
+  });
+
+  document.querySelectorAll(".page").forEach((p) => {
+    p.classList.toggle("active", p.id === id);
+  });
+
+  const nav = document.querySelector(`.nav[data-page="${id}"]`);
+  if ($("pageTitle") && nav) {
+    $("pageTitle").textContent = nav.textContent
+      .replace(/[^\u4e00-\u9fa5A-Za-z]/g, "")
+      .trim();
+  }
+
+  $("sidebar")?.classList.remove("open");
+}
+
+async function apiGet(action) {
+  if (!API_URL) throw new Error("尚未設定 API_URL");
+
+  const url = `${API_URL}?action=${encodeURIComponent(action)}&organizationId=${encodeURIComponent(ORG_ID)}`;
+  const res = await fetch(url);
+  return await res.json();
+}
+
+async function apiPost(action, payload = {}) {
+  if (!API_URL) throw new Error("尚未設定 API_URL");
+
+  const res = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8"
+    },
+    body: JSON.stringify({
+      action,
+      payload: {
+        organizationId: ORG_ID,
+        ...payload
+      }
+    })
+  });
+
+  return await res.json();
+}
+
+async function loadInit() {
+  try {
+    setStatus("連線中...");
+
+    const data = await apiGet("init");
+
+    if (!data.ok) {
+      throw new Error(data.message || "讀取失敗");
+    }
+
+    state = {
+      ...state,
+      ...data,
+      visits: data.visits || state.visits || [],
+      schedule: data.schedule || data.schedules || state.schedule || []
+    };
+
+    setStatus("已連線", "ok");
+  } catch (err) {
+    console.error(err);
+    setStatus("離線展示模式", "err");
+    seedDemo();
+  }
+
+  renderAll();
+}
+
+function seedDemo() {
+  state.dashboard = {
+    totalCases: 3,
+    todayCases: 1,
+    processingCases: 2,
+    aiFiledCases: 1
+  };
+
+  state.categories = [
+    { categoryName: "道路" },
+    { categoryName: "排水" },
+    { categoryName: "路燈" },
+    { categoryName: "交通" },
+    { categoryName: "環境" },
+    { categoryName: "社福" }
+  ];
+
+  state.cases = [
+    {
+      caseNo: "CASE-001",
+      citizenName: "王先生",
+      categoryName: "排水",
+      title: "水溝蓋破損",
+      address: "東興路一段附近",
+      priority: "急件",
+      status: "處理中"
+    },
+    {
+      caseNo: "CASE-002",
+      citizenName: "李小姐",
+      categoryName: "路燈",
+      title: "路燈不亮",
+      address: "和平里",
+      priority: "一般",
+      status: "待受理"
+    },
+    {
+      caseNo: "CASE-003",
+      citizenName: "陳先生",
+      categoryName: "交通",
+      title: "違停嚴重",
+      address: "五權路",
+      priority: "一般",
+      status: "已完成"
+    }
+  ];
+
+  state.citizens = [
+    {
+      name: "王先生",
+      phone: "0912xxx",
+      address: "東興路",
+      village: "和平里",
+      caseCount: 1
+    },
+    {
+      name: "李小姐",
+      phone: "0922xxx",
+      address: "和平里",
+      village: "和平里",
+      caseCount: 1
+    }
+  ];
+
+  state.visits = [];
+  state.schedule = [];
+}
+
+function setStatus(text, cls = "") {
+  const el = $("apiStatus");
+  if (!el) return;
+
+  el.textContent = text;
+  el.className = "apiStatus " + cls;
+}
+
+function renderAll() {
+  const org = state.organization || {};
+  const d = state.dashboard || state.stats || {};
+
+  if ($("brandName") && org.organizationName) {
+    $("brandName").textContent = org.organizationName;
+  }
+
+  setText("totalCases", d.totalCases || d.total || state.cases.length || 0);
+  setText("todayCases", d.todayCases || 0);
+  setText("processingCases", d.processingCases || 0);
+  setText("aiFiledCases", d.aiFiledCases || d.aiFiled || 0);
+
+  renderCategories();
+  renderCases();
+  renderCitizens();
+  renderVisits();
+  renderSchedule();
+}
+
+function setText(id, value) {
+  const el = $(id);
+  if (el) el.textContent = value;
+}
+
+function renderCategories() {
+  const sel = $("caseCategory");
+  if (!sel) return;
+
+  const categories = state.categories || [];
+
+  sel.innerHTML =
+    categories.map((c) => `<option>${esc(c.categoryName)}</option>`).join("") ||
+    "<option>一般陳情</option>";
+}
+
+function renderCases() {
+  const rows = (state.cases || []).slice().reverse();
+
+  if ($("caseTable")) {
+    $("caseTable").innerHTML = table(
+      ["編號", "民眾", "分類", "標題", "地址", "急迫", "狀態"],
+      rows.map((c) => [
+        c.caseNo,
+        c.citizenName,
+        c.categoryName,
+        c.title,
+        c.address,
+        c.priority,
+        c.status
+      ])
+    );
+  }
+
+  if ($("recentCases")) {
+    $("recentCases").innerHTML = table(
+      ["編號", "民眾", "分類", "狀態"],
+      rows.slice(0, 6).map((c) => [
+        c.caseNo,
+        c.citizenName,
+        c.categoryName,
+        c.status
+      ])
+    );
+  }
+}
+
+function renderCitizens() {
+  if (!$("citizenTable")) return;
+
+  $("citizenTable").innerHTML = table(
+    ["姓名", "電話", "地址", "里別", "案件數"],
+    (state.citizens || []).map((c) => [
+      c.name,
+      c.phone,
+      c.address,
+      c.village,
+      c.caseCount
+    ])
+  );
+}
+
+function renderVisits() {
+  if (!$("visitTable")) return;
+
+  $("visitTable").innerHTML = table(
+    ["日期", "對象", "地址", "里別", "內容"],
+    (state.visits || []).map((v) => [
+      v.visitDate,
+      v.citizenName,
+      v.address,
+      v.village,
+      v.summary || v.content
+    ])
+  );
+}
+
+function renderSchedule() {
+  if (!$("scheduleTable")) return;
+
+  $("scheduleTable").innerHTML = table(
+    ["日期", "時間", "標題", "地點", "狀態"],
+    (state.schedule || []).map((s) => [
+      s.startDate,
+      s.startTime,
+      s.title,
+      s.location,
+      s.status
+    ])
+  );
+}
+
+function table(headers, rows) {
+  return `
+    <thead>
+      <tr>
+        ${headers.map((h) => `<th>${esc(h)}</th>`).join("")}
+      </tr>
+    </thead>
+    <tbody>
+      ${
+        rows.length
+          ? rows
+              .map(
+                (r) => `
+                  <tr>
+                    ${r.map((v) => `<td>${esc(v || "")}</td>`).join("")}
+                  </tr>
+                `
+              )
+              .join("")
+          : `<tr><td colspan="${headers.length}">目前尚無資料</td></tr>`
+      }
+    </tbody>
+  `;
+}
+
+function esc(v) {
+  return String(v ?? "").replace(/[&<>"']/g, (m) => {
+    return {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    }[m];
+  });
+}
+
+async function createCase() {
+  const payload = {
+    citizenName: $("caseName")?.value || "",
+    phone: $("casePhone")?.value || "",
+    categoryName: $("caseCategory")?.value || "一般陳情",
+    priority: $("casePriority")?.value || "一般",
+    address: $("caseAddress")?.value || "",
+    village: $("caseVillage")?.value || "",
+    content: $("caseContent")?.value || "",
+    title: `${$("caseCategory")?.value || "一般陳情"}｜${($("caseContent")?.value || "").slice(0, 18)}`
+  };
+
+  if (!payload.citizenName && !payload.content) {
+    alert("請至少輸入民眾姓名或案件內容");
+    return;
+  }
+
+  try {
+    const res = await apiPost("createCase", payload);
+
+    if (!res.ok) {
+      throw new Error(res.message || "新增失敗");
+    }
+
+    await loadInit();
+    clearCaseForm();
+    alert("新增成功");
+  } catch (err) {
+    alert("新增失敗：" + err.message);
+  }
+}
+
+function clearCaseForm() {
+  ["caseName", "casePhone", "caseAddress", "caseVillage", "caseContent"].forEach((id) => {
+    if ($(id)) $(id).value = "";
+  });
+}
+
+async function runAIFiling(autoCreateCase = true) {
+  const rawContent = $("aiInput")?.value.trim() || "";
+
+  if (!rawContent) {
+    alert("請先輸入民眾陳情內容");
+    return;
+  }
+
+  if ($("aiResult")) {
+    $("aiResult").textContent = "分析中...";
+  }
+
+  try {
+    const res = await apiPost("aiFiling", {
+      rawContent,
+      autoCreateCase
+    });
+
+    if (!res.ok) {
+      throw new Error(res.message || "AI 歸檔失敗");
+    }
+
+    if ($("aiResult")) {
+      $("aiResult").textContent = JSON.stringify(res, null, 2);
+    }
+
+    await loadInit();
+  } catch (err) {
+    if ($("aiResult")) {
+      $("aiResult").textContent = "失敗：" + err.message;
+    }
+  }
+}
+
+async function createVisit() {
+  try {
+    const res = await apiPost("createVisit", {
+      citizenName: $("visitName")?.value || "",
+      address: $("visitAddress")?.value || "",
+      village: $("visitVillage")?.value || "",
+      content: $("visitContent")?.value || "",
+      summary: $("visitContent")?.value || ""
+    });
+
+    if (!res.ok) {
+      throw new Error(res.message || "新增拜訪紀錄失敗");
+    }
+
+    await loadInit();
+    alert("拜訪紀錄已新增");
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+async function createSchedule() {
+  try {
+    const res = await apiPost("createSchedule", {
+      title: $("schTitle")?.value || "",
+      startDate: $("schDate")?.value || "",
+      startTime: $("schTime")?.value || "",
+      location: $("schLocation")?.value || "",
+      status: "預定"
+    });
+
+    if (!res.ok) {
+      throw new Error(res.message || "新增行程失敗");
+    }
+
+    await loadInit();
+    alert("行程已新增");
+  } catch (err) {
+    alert(err.message);
+  }
+}
+重點：
+這份比較安全，不會因為某個 HTML 元素不存在就整個壞掉。
+
+
+我同意，而且這不是小修能解決的，是整個 UI 設計方向錯了。
+
+你前面一直給我的參考圖，其實很明確：
+
+白色大面積留白
+
+綠色品牌色
+
+Hero Banner 很大
+
+左上直接放 江肇國服務團隊 Logo
+
+Banner 放你設計的那張人物圖
+
+整體像 Linear、Notion、Vercel、Stripe 這種 SaaS，而不是傳統後台。
+
+但我前面做出來比較像：
+
+AdminLTE
+
+Bootstrap 後台
+
+2018 年管理系統
+
+這跟你的品牌風格不一致。
+
+我會整個重做，不是修改
+首頁會長這樣
+┌──────────────────────────────────────────────────────────────┐
+│ LOGO                         🔔  👤                         │
+├──────────────────────────────────────────────────────────────┤
+│                                                            │
+│   ← 你的 Banner（整張）                                   │
+│                                                            │
+│  服務案件智慧管理平台                                      │
+│  每一件服務，都值得被完整追蹤。                            │
+│                                                            │
+└──────────────────────────────────────────────────────────────┘
+
+┌───────┐ ┌───────┐ ┌───────┐ ┌───────┐
+│今日案件│ │處理中 │ │AI歸檔 │ │已完成 │
+└───────┘ └───────┘ └───────┘ └───────┘
+不是一進去就是表格。
+
+左側選單
+全部重新設計
+
+江肇國服務團隊
+──────────────
+
+🏠 儀表板
+
+📋 服務案件
+
+🤖 AI快速歸檔
+
+👥 民眾資料
+
+🗺 外勤拜訪
+
+📅 行程管理
+
+📂 附件中心
+
+📊 AI分析
+
+🏢 服務團隊
+
+⚙ 系統設定
+完全扁平化。
+
+Banner
+不是一張圖片塞進去。
+
+而是：
+
+左邊
+
+服務案件智慧管理平台
+
+做事的人，
+讓每一件服務案件都有追蹤。
+
+立即新增案件
+AI快速歸檔
+右邊
+
+直接放
+
+你的人像 Banner
+
+整塊 Hero。
+
+卡片
+不要這種
+
+總案件
+
+123
+我要改成
+
+📋 今日服務案件
+
+24 件
+
+比昨天 +6
+像 Apple、Stripe 的 Dashboard。
+
+AI快速歸檔
+不是 textarea。
+
+而是
+
+┌─────────────────────────────┐
+
+🎤 可直接貼上
+
+電話紀錄
+
+LINE訊息
+
+逐字稿
+
+↓
+
+AI分析
+
+↓
+
+案件摘要
+
+↓
+
+建立案件
+
+└─────────────────────────────┘
+有流程感。
+
+整體色彩
+不是 Bootstrap 綠。
+
+而是你的 Banner 延伸。
+
+主色
+
+#0B6B43
+
+背景
+
+#F7FAF8
+
+卡片
+
+純白
+
+Hover
+
+#F2FBF6
+字體
+不要 Arial。
+
+全部改：
+
+Noto Sans TC
+
+Inter
+圖示
+全部
+
+Lucide
+不要 Bootstrap Icons。
+
+我要直接做到接近這些等級
+Linear
+
+Stripe Dashboard
+
+Vercel
+
+Notion
+
+Arc Browser
+
+Framer
+
+Supabase Dashboard
+
+我建議直接進入 V4 重製版。
+不是修 V3，而是砍掉重做 UI，保留你已經規劃好的功能（20 個 Sheet、Apps Script、AI 快速歸檔等），但重新設計：
+
+全新的 UI/UX
+
+完全符合你的 Logo 與 Banner
+
+手機、平板、電腦都重新排版
+
+更有「企業 SaaS」質感，而不是傳統管理後台。
+
+我會把它做到你一打開，就有「這是可以拿去 Demo 給議員服務處」的水準，而不是像工程測試版。
+
+
+已思考幾秒鐘
+對，你抓到重點了。
+
+這份 CSS 的問題是：只有把顏色改綠，但版型本質還是傳統後台。
+
+最大問題：
+
+.hero img{max-width:36%}
+這會讓你的 Banner 被當成小配圖，不像主視覺。
+
+.sidebar 固定深綠滿版
+太老式後台，不像現代 SaaS。
+
+沒有真正連接你的圖片資產
+應該明確指定：
+
+assets/logo.png
+assets/banner.png
+卡片、表格太「資料庫後台感」
+Demo 給人看會覺得像工程測試版。
+
+整體缺少品牌首頁感
+應該先看到「江肇國服務團隊 + 服務案件智慧管理平台 + Banner」。
+
+你這份不要再修，我會改成：
+
+assets/logo.png
+assets/banner.png
+然後版面變成：
+
+左側：乾淨白色側欄 + Logo
+右側：大 Banner Hero
+下方：現代卡片
+再下方：AI快速歸檔 / 案件列表
+手機：Logo 在上，選單抽屜，Banner 滿版
+我下一步直接給你一份完整新版 index.html + style.css + app.js，讓你直接覆蓋。
+
+
+給我
+
+已思考 1m 34s
+給你 V4 重製版，已經把版面改成比較現代 SaaS 風格，並且明確連接：
+
+assets/logo.png
+assets/banner.png
+
+下載整包：
+political-case-platform-v4.zip
+
+
+你這樣寫系統的方式很醜 麻煩你就只要先生丞這個 我在這裡完整複製貼上不用下載檔案 :root{
+  --green:#0B6B43;
+  --greenDark:#063d2a;
+  --greenSoft:#EAF6EF;
+  --mint:#F4FBF6;
+  --text:#132820;
+  --muted:#6b7b73;
+  --bg:#F7FAF8;
+  --card:#FFFFFF;
+  --border:#DDEAE2;
+  --shadow:0 24px 70px rgba(8,72,45,.09);
+  --radius:28px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Inter","Noto Sans TC","Microsoft JhengHei",Arial,sans-serif;background:radial-gradient(circle at top right,#eaf8ef 0,#f7faf8 34%,#f7faf8 100%);color:var(--text)}
+button,input,select,textarea{font:inherit}
+button{border:0;cursor:pointer}
+.shell{display:flex;min-height:100vh;padding:18px;gap:18px}
+.sidebar{width:286px;flex:0 0 286px;background:rgba(255,255,255,.86);backdrop-filter:blur(18px);border:1px solid var(--border);border-radius:30px;padding:18px;position:sticky;top:18px;height:calc(100vh - 36px);box-shadow:var(--shadow);display:flex;flex-direction:column;z-index:30}
+.brandBlock{display:flex;align-items:center;gap:12px;padding:8px 8px 18px;border-bottom:1px solid var(--border);margin-bottom:14px}
+.brandLogo{width:54px;height:54px;border-radius:16px;object-fit:cover;background:var(--green);box-shadow:0 10px 30px rgba(11,107,67,.20)}
+.brandBlock strong{display:block;font-size:18px;line-height:1.2;letter-spacing:.02em}.brandBlock span{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.04em;text-transform:uppercase}.navList{display:grid;gap:7px}.nav{width:100%;text-align:left;background:transparent;color:var(--text);padding:13px 14px;border-radius:16px;font-weight:800;letter-spacing:.01em;transition:.18s}.nav:hover{background:var(--mint);transform:translateX(2px)}.nav.active{background:var(--green);color:#fff;box-shadow:0 12px 26px rgba(11,107,67,.22)}.sideCard{margin-top:auto;background:linear-gradient(145deg,var(--green),#0f7a4d);border-radius:22px;padding:18px;color:#fff;box-shadow:0 20px 46px rgba(11,107,67,.22)}.sideCard span{display:block;font-size:12px;opacity:.8}.sideCard b{display:block;font-size:20px;margin:6px 0}.sideCard p{margin:0;font-size:13px;line-height:1.65;opacity:.88}.main{flex:1;min-width:0}.topbar{height:76px;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}.topbar h1{margin:0;font-size:27px;letter-spacing:-.03em}.topbar p{margin:4px 0 0;color:var(--muted);font-size:14px}.topActions{display:flex;align-items:center;gap:10px}.menuBtn{display:none;background:#fff;border:1px solid var(--border);border-radius:14px;padding:11px 13px;box-shadow:0 10px 28px rgba(8,72,45,.08)}.apiStatus{display:inline-flex;align-items:center;gap:7px;padding:9px 13px;border-radius:999px;background:#fff;border:1px solid var(--border);color:var(--muted);font-size:13px;font-weight:800}.apiStatus:before{content:"";width:8px;height:8px;border-radius:50%;background:#f59e0b}.apiStatus.ok{color:var(--green);background:#eefaf2}.apiStatus.ok:before{background:#16a34a}.apiStatus.err{color:#b42318;background:#fff1f1}.apiStatus.err:before{background:#ef4444}.primary,button:not(.nav):not(.menuBtn):not(.ghost){background:var(--green);color:#fff;border-radius:16px;padding:13px 18px;font-weight:900;box-shadow:0 14px 30px rgba(11,107,67,.18)}.ghost{background:#fff;color:var(--green);border:1px solid var(--border);border-radius:16px;padding:13px 18px;font-weight:900}.small{padding:10px 14px;font-size:14px}.page{display:none;animation:rise .25s ease}.page.active{display:block}@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}.hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(360px,.95fr);gap:18px;background:linear-gradient(135deg,#fff 0%,#fff 45%,#ecf8f0 100%);border:1px solid var(--border);border-radius:34px;padding:18px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:18px;min-height:390px}.heroText{padding:34px 28px;display:flex;flex-direction:column;justify-content:center}.eyebrow{display:inline-flex;width:max-content;background:var(--greenSoft);color:var(--green);border:1px solid #d6eadc;border-radius:999px;padding:8px 12px;font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}.hero h2,.pageHero h2{font-size:54px;line-height:1.06;letter-spacing:-.055em;margin:18px 0 14px}.hero p,.pageHero p{font-size:18px;color:var(--muted);line-height:1.75;margin:0;max-width:620px}.heroBtns{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}.heroVisual{position:relative;border-radius:26px;overflow:hidden;background:#e7f5ec;min-height:350px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.45)}.heroVisual img{width:100%;height:100%;object-fit:cover;display:block}.statsGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:18px}.statCard{background:rgba(255,255,255,.9);border:1px solid var(--border);border-radius:26px;padding:20px;box-shadow:0 16px 45px rgba(8,72,45,.06)}.statCard span{display:block;color:var(--muted);font-weight:800;font-size:13px}.statCard b{display:block;font-size:38px;letter-spacing:-.05em;margin:8px 0 4px}.statCard small{color:var(--muted)}.statCard.accent{background:linear-gradient(145deg,var(--green),#148458);color:#fff}.statCard.accent span,.statCard.accent small{color:rgba(255,255,255,.78)}.gridTwo{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(320px,.75fr);gap:18px}.panel,.feature{background:rgba(255,255,255,.92);border:1px solid var(--border);border-radius:28px;padding:22px;box-shadow:0 18px 55px rgba(8,72,45,.06)}.panelHead{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:14px}.panel h3{font-size:22px;letter-spacing:-.03em;margin:0}.panelHead p,.aiPreview p,.feature p{margin:6px 0 0;color:var(--muted);line-height:1.7}.aiPreview{background:linear-gradient(160deg,#fff,#eef9f2)}.aiPreview h3{font-size:28px;margin:14px 0 8px}.flow{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:20px 0}.flow span{background:#fff;border:1px solid var(--border);border-radius:16px;padding:12px;font-weight:900;text-align:center;color:var(--green)}.pageHero{background:linear-gradient(135deg,#fff,#effaf3);border:1px solid var(--border);border-radius:30px;padding:30px;margin-bottom:18px;box-shadow:0 18px 55px rgba(8,72,45,.06)}.pageHero.compact h2{font-size:40px;margin:8px 0}.aiWorkPanel textarea{min-height:190px;font-size:17px;line-height:1.8}input,select,textarea{width:100%;border:1px solid var(--border);background:#fbfefc;border-radius:18px;padding:14px 15px;color:var(--text);outline:none;transition:.15s}input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 4px rgba(11,107,67,.1)}.formGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.formGrid textarea{grid-column:1/-1;min-height:120px}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.tableWrap{overflow:auto;border-radius:20px;border:1px solid var(--border)}table{width:100%;border-collapse:collapse;min-width:720px;background:#fff}th,td{padding:14px 13px;border-bottom:1px solid var(--border);text-align:left;font-size:14px;white-space:nowrap}th{background:#f4faf6;color:var(--muted);font-weight:900}tr:hover td{background:#fbfefc}pre{background:#101f18;color:#dfffe9;border-radius:20px;padding:18px;overflow:auto;min-height:160px;line-height:1.7}.featureGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.feature b{display:block;font-size:22px;margin-bottom:8px}.largeText{font-size:18px;line-height:2;color:var(--muted)}code{background:#eef7f1;color:var(--green);padding:3px 7px;border-radius:8px;font-weight:800}
+@media (max-width:1100px){.hero{grid-template-columns:1fr}.heroVisual{min-height:300px}.statsGrid{grid-template-columns:repeat(2,1fr)}.gridTwo,.featureGrid{grid-template-columns:1fr}.hero h2{font-size:44px}}
+@media (max-width:900px){.shell{padding:12px;display:block}.sidebar{position:fixed;left:12px;top:12px;bottom:12px;height:auto;transform:translateX(calc(-100% - 24px));transition:.22s;width:min(310px,calc(100vw - 24px))}.sidebar.open{transform:translateX(0)}.main{width:100%}.menuBtn{display:inline-flex}.topbar{height:auto;align-items:flex-start}.topbar p{display:none}.topActions{margin-left:auto}.apiStatus{display:none}.hero{border-radius:28px;min-height:0}.heroText{padding:18px 8px}.hero h2{font-size:36px}.hero p,.pageHero p{font-size:16px}.heroVisual{min-height:260px}.formGrid{grid-template-columns:1fr}}
+@media (max-width:560px){.topbar h1{font-size:22px}.small{display:none}.hero{padding:14px}.hero h2{font-size:31px}.pageHero.compact h2{font-size:30px}.statsGrid{grid-template-columns:1fr}.statCard b{font-size:34px}.flow{grid-template-columns:1fr}.panel,.pageHero{padding:18px;border-radius:24px}.heroBtns button{width:100%}}
+
+這份就比我前面做的好很多，我認同。
+
+你的方向其實已經接近 Linear + Stripe + Vercel + Apple 的風格了。
+
+不過如果目標是拿去 Demo 給江肇國服務團隊，我還是會改幾個地方，這些是 UI/UX，不是程式碼問題。
+
+① Sidebar 不要玻璃感
+現在：
+
+background: rgba(255,255,255,.86);
+backdrop-filter: blur(18px);
+我反而會改成：
+
+background:#ffffff;
+border-right:1px solid #edf2ee;
+box-shadow:none;
+原因：
+
+政治人物系統每天開十幾個小時。
+
+玻璃感看久很累。
+
+Linear
+
+Notion
+
+GitHub
+
+Supabase
+
+全部都是純白 Sidebar。
+
+② Hero 太高
+你現在：
+
+min-height:390px;
+我會改：
+
+min-height:320px;
+Banner會更俐落。
+
+③ Hero 字太大
+54px
+
+太像形象網站。
+
+我建議：
+
+42px
+④ 卡片太圓
+現在：
+
+28px
+我會改：
+
+18px
+原因：
+
+現在 Apple VisionOS 之後
+
+大家開始回到
+
+16~20px
+
+比較有科技感。
+
+⑤ Box Shadow 太重
+例如：
+
+0 24px 70px
+太浮。
+
+我會改
+
+0 8px 30px rgba(...)
+⑥ Hero圖片
+現在
+
+object-fit:cover;
+不一定適合。
+
+因為你的 Banner 本來就是設計稿。
+
+應該：
+
+object-fit:contain;
+
+background:white;
+避免裁掉江肇國。
+
+⑦ Dashboard
+現在
+
+四個卡片
+
+我反而想改：
+
+今日案件
+
+待處理
+
+AI快速歸檔
+
+本月完成
+
+服務滿意度
+第五個
+
+比較有未來感。
+
+⑧ AI快速歸檔
+我不會做 textarea
+
+我要做：
+
+┌───────────────────────┐
+
+🎤 語音輸入
+
+📷 圖片辨識
+
+📄 貼上文字
+
+──────────────
+
+AI分析
+
+──────────────
+
+案件摘要
+
+案件分類
+
+承辦單位
+
+建立案件
+
+└───────────────────────┘
+比較像 ChatGPT。
+
+⑨ 最大問題
+你的 CSS
+
+已經很好。
+
+但是 HTML 還是一般 Admin。
+
+真正漂亮的是：
+
+HTML。
+
+例如首頁不是：
+
+Banner
+
+↓
+
+四個卡片
+
+↓
+
+Table
+我要變成
+
+Banner
+
+↓
+
+今日工作
+
+↓
+
+AI快速歸檔
+
+↓
+
+最近案件
+
+↓
+
+案件地圖
+
+↓
+
+服務統計
+
+↓
+
+今日行程
+
+↓
+
+AI提醒
+整個層級完全不同。
+
+我建議 V5 不再先寫程式，而是先做 UI 設計稿
+也就是我先把 整個 HTML 結構 設計好，做到像 Figma 的高保真介面，再開始串 Apps Script。
+
+這樣你不會一直遇到「功能都有了，但畫面不像一套產品」的問題。
+
+我會把它做成真正可以拿去向議員服務處展示的 SaaS 產品，而不是工程師風格的管理後台。
+
+
+你做 css給我  你把這檔案讓我先完整複製貼上
+
+下面這份就是完整 style.css，你可以整份複製貼上覆蓋。
+
+:root {
+  --green: #0B6B43;
+  --greenDark: #063D2A;
+  --greenDeep: #04281C;
+  --greenSoft: #EAF6EF;
+  --mint: #F5FBF7;
+
+  --text: #132820;
+  --muted: #6B7B73;
+  --lightText: #8A9991;
+
+  --bg: #F7FAF8;
+  --card: #FFFFFF;
+  --border: #DDEAE2;
+
+  --danger: #B42318;
+  --warning: #F59E0B;
+  --success: #16A34A;
+
+  --shadow: 0 10px 34px rgba(8, 72, 45, 0.07);
+  --shadowSoft: 0 6px 20px rgba(8, 72, 45, 0.05);
+
+  --radius: 20px;
+  --radiusLg: 28px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", "Noto Sans TC", "Microsoft JhengHei", Arial, sans-serif;
+  background:
+    radial-gradient(circle at top right, rgba(234, 248, 239, 0.9) 0, rgba(247, 250, 248, 0) 38%),
+    var(--bg);
+  color: var(--text);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  border: 0;
+  cursor: pointer;
+}
+
+.shell {
+  display: flex;
+  min-height: 100vh;
+  padding: 18px;
+  gap: 18px;
+}
+
+/* Sidebar */
+
+.sidebar {
+  width: 286px;
+  flex: 0 0 286px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  padding: 18px;
+  position: sticky;
+  top: 18px;
+  height: calc(100vh - 36px);
+  box-shadow: var(--shadowSoft);
+  display: flex;
+  flex-direction: column;
+  z-index: 30;
+}
+
+.brandBlock {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 8px 18px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 14px;
+}
+
+.brandLogo {
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  object-fit: contain;
+  background: var(--green);
+  box-shadow: 0 10px 26px rgba(11, 107, 67, 0.16);
+}
+
+.brandBlock strong {
+  display: block;
+  font-size: 18px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.brandBlock span {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.navList {
+  display: grid;
+  gap: 7px;
+}
+
+.nav {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  color: var(--text);
+  padding: 13px 14px;
+  border-radius: 15px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  transition: 0.18s ease;
+}
+
+.nav:hover {
+  background: var(--mint);
+  transform: translateX(2px);
+}
+
+.nav.active {
+  background: var(--green);
+  color: #ffffff;
+  box-shadow: 0 12px 24px rgba(11, 107, 67, 0.18);
+}
+
+.sideCard {
+  margin-top: auto;
+  background: linear-gradient(145deg, var(--green), #148458);
+  border-radius: 22px;
+  padding: 18px;
+  color: #ffffff;
+  box-shadow: 0 18px 38px rgba(11, 107, 67, 0.18);
+}
+
+.sideCard span {
+  display: block;
+  font-size: 12px;
+  opacity: 0.82;
+}
+
+.sideCard b {
+  display: block;
+  font-size: 20px;
+  margin: 6px 0;
+}
+
+.sideCard p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.65;
+  opacity: 0.9;
+}
+
+/* Main */
+
+.main {
+  flex: 1;
+  min-width: 0;
+}
+
+.topbar {
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: 27px;
+  letter-spacing: -0.04em;
+}
+
+.topbar p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.topActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.menuBtn {
+  display: none;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 11px 13px;
+  box-shadow: var(--shadowSoft);
+}
+
+.apiStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 13px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.apiStatus::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--warning);
+}
+
+.apiStatus.ok {
+  color: var(--green);
+  background: #EEF9F2;
+}
+
+.apiStatus.ok::before {
+  background: var(--success);
+}
+
+.apiStatus.err {
+  color: var(--danger);
+  background: #FFF1F1;
+}
+
+.apiStatus.err::before {
+  background: #EF4444;
+}
+
+/* Buttons */
+
+.primary,
+button:not(.nav):not(.menuBtn):not(.ghost) {
+  background: var(--green);
+  color: #ffffff;
+  border-radius: 16px;
+  padding: 13px 18px;
+  font-weight: 900;
+  box-shadow: 0 12px 26px rgba(11, 107, 67, 0.16);
+  transition: 0.16s ease;
+}
+
+.primary:hover,
+button:not(.nav):not(.menuBtn):not(.ghost):hover {
+  background: #095B39;
+  transform: translateY(-1px);
+}
+
+.ghost {
+  background: #ffffff;
+  color: var(--green);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 13px 18px;
+  font-weight: 900;
+  transition: 0.16s ease;
+}
+
+.ghost:hover {
+  background: var(--greenSoft);
+}
+
+.small {
+  padding: 10px 14px;
+  font-size: 14px;
+}
+
+/* Pages */
+
+.page {
+  display: none;
+  animation: rise 0.25s ease;
+}
+
+.page.active {
+  display: block;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.95fr);
+  gap: 18px;
+  background: linear-gradient(135deg, #ffffff 0%, #ffffff 45%, #ECF8F0 100%);
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  padding: 18px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  margin-bottom: 18px;
+  min-height: 320px;
+}
+
+.heroText {
+  padding: 30px 26px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.eyebrow {
+  display: inline-flex;
+  width: max-content;
+  background: var(--greenSoft);
+  color: var(--green);
+  border: 1px solid #D6EADC;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero h2,
+.pageHero h2 {
+  font-size: 42px;
+  line-height: 1.08;
+  letter-spacing: -0.05em;
+  margin: 18px 0 14px;
+}
+
+.hero p,
+.pageHero p {
+  font-size: 17px;
+  color: var(--muted);
+  line-height: 1.75;
+  margin: 0;
+  max-width: 640px;
+}
+
+.heroBtns {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 26px;
+}
+
+.heroVisual {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  background: #ffffff;
+  min-height: 280px;
+  border: 1px solid rgba(221, 234, 226, 0.75);
+}
+
+.heroVisual img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Stats */
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.statCard {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: var(--shadowSoft);
+}
+
+.statCard span {
+  display: block;
+  color: var(--muted);
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.statCard b {
+  display: block;
+  font-size: 36px;
+  letter-spacing: -0.05em;
+  margin: 8px 0 4px;
+}
+
+.statCard small {
+  color: var(--muted);
+}
+
+.statCard.accent {
+  background: linear-gradient(145deg, var(--green), #148458);
+  color: #ffffff;
+}
+
+.statCard.accent span,
+.statCard.accent small {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Layout */
+
+.gridTwo {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+  gap: 18px;
+}
+
+.panel,
+.feature {
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 22px;
+  box-shadow: var(--shadowSoft);
+}
+
+.panelHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.panel h3 {
+  font-size: 22px;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.panelHead p,
+.aiPreview p,
+.feature p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.aiPreview {
+  background: linear-gradient(160deg, #ffffff, #EEF9F2);
+}
+
+.aiPreview h3 {
+  font-size: 28px;
+  margin: 14px 0 8px;
+}
+
+.flow {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.flow span {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 12px;
+  font-weight: 900;
+  text-align: center;
+  color: var(--green);
+}
+
+/* Page Hero */
+
+.pageHero {
+  background: linear-gradient(135deg, #ffffff, #EFFAF3);
+  border: 1px solid var(--border);
+  border-radius: 26px;
+  padding: 28px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadowSoft);
+}
+
+.pageHero.compact h2 {
+  font-size: 34px;
+  margin: 8px 0;
+}
+
+/* Forms */
+
+.aiWorkPanel textarea {
+  min-height: 190px;
+  font-size: 17px;
+  line-height: 1.8;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  background: #FBFEFC;
+  border-radius: 16px;
+  padding: 14px 15px;
+  color: var(--text);
+  outline: none;
+  transition: 0.15s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 4px rgba(11, 107, 67, 0.1);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.formGrid textarea {
+  grid-column: 1 / -1;
+  min-height: 120px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+/* Tables */
+
+.tableWrap {
+  overflow: auto;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+  background: #ffffff;
+}
+
+th,
+td {
+  padding: 14px 13px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+th {
+  background: #F4FAF6;
+  color: var(--muted);
+  font-weight: 900;
+}
+
+tr:hover td {
+  background: #FBFEFC;
+}
+
+/* Code / Result */
+
+pre {
+  background: #101F18;
+  color: #DFFFE9;
+  border-radius: 18px;
+  padding: 18px;
+  overflow: auto;
+  min-height: 160px;
+  line-height: 1.7;
+}
+
+/* Feature */
+
+.featureGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.feature b {
+  display: block;
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+
+.largeText {
+  font-size: 18px;
+  line-height: 2;
+  color: var(--muted);
+}
+
+code {
+  background: #EEF7F1;
+  color: var(--green);
+  padding: 3px 7px;
+  border-radius: 8px;
+  font-weight: 800;
+}
+
+/* Mobile */
+
+@media (max-width: 1100px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .heroVisual {
+    min-height: 300px;
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .gridTwo,
+  .featureGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero h2 {
+    font-size: 38px;
+  }
+}
+
+@media (max-width: 900px) {
+  .shell {
+    padding: 12px;
+    display: block;
+  }
+
+  .sidebar {
+    position: fixed;
+    left: 12px;
+    top: 12px;
+    bottom: 12px;
+    height: auto;
+    transform: translateX(calc(-100% - 24px));
+    transition: 0.22s ease;
+    width: min(310px, calc(100vw - 24px));
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .main {
+    width: 100%;
+  }
+
+  .menuBtn {
+    display: inline-flex;
+  }
+
+  .topbar {
+    height: auto;
+    align-items: flex-start;
+  }
+
+  .topbar p {
+    display: none;
+  }
+
+  .topActions {
+    margin-left: auto;
+  }
+
+  .apiStatus {
+    display: none;
+  }
+
+  .hero {
+    border-radius: 26px;
+    min-height: 0;
+  }
+
+  .heroText {
+    padding: 18px 8px;
+  }
+
+  .hero h2 {
+    font-size: 34px;
+  }
+
+  .hero p,
+  .pageHero p {
+    font-size: 16px;
+  }
+
+  .heroVisual {
+    min-height: 260px;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .topbar h1 {
+    font-size: 22px;
+  }
+
+  .small {
+    display: none;
+  }
+
+  .hero {
+    padding: 14px;
+  }
+
+  .hero h2 {
+    font-size: 30px;
+  }
+
+  .pageHero.compact h2 {
+    font-size: 29px;
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .statCard b {
+    font-size: 34px;
+  }
+
+  .flow {
+    grid-template-columns: 1fr;
+  }
+
+  .panel,
+  .pageHero {
+    padding: 18px;
+    border-radius: 22px;
+  }
+
+  .heroBtns button {
+    width: 100%;
+  }
+}
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>服務案件智慧管理平台</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <img src="assets/logo.png" onerror="this.style.display='none'" />
+        <div>
+          <b id="brandName">江肇國服務團隊</b>
+          <span>服務案件智慧管理平台</span>
+        </div>
+      </div>
+      <button class="nav active" data-page="dashboard">🏠 儀表板</button>
+      <button class="nav" data-page="cases">📋 服務案件</button>
+      <button class="nav" data-page="ai">🤖 AI快速歸檔</button>
+      <button class="nav" data-page="citizens">👥 民眾資料</button>
+      <button class="nav" data-page="visits">🚶 外勤拜訪</button>
+      <button class="nav" data-page="schedule">📅 行程</button>
+      <button class="nav" data-page="offices">🏢 專屬團隊</button>
+      <button class="nav" data-page="settings">⚙️ 系統設定</button>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button id="menuBtn">☰</button>
+        <div>
+          <h1 id="pageTitle">儀表板</h1>
+          <p>接電話 → 輸入重點 → AI歸檔 → 一鍵建案 → 後續追蹤</p>
+        </div>
+        <div class="apiStatus" id="apiStatus">未連線</div>
+      </header>
+
+      <section class="hero">
+        <div>
+          <h2>服務案件智慧管理平台</h2>
+          <p>為每個服務團隊打造專屬、獨立、安全的案件管理系統。</p>
+        </div>
+        <img src="assets/banner.png" onerror="this.style.display='none'" />
+      </section>
+
+      <section id="dashboard" class="page active">
+        <div class="cards">
+          <div class="card"><span>總案件</span><b id="totalCases">0</b></div>
+          <div class="card"><span>今日新增</span><b id="todayCases">0</b></div>
+          <div class="card"><span>處理中</span><b id="processingCases">0</b></div>
+          <div class="card"><span>AI已歸檔</span><b id="aiFiledCases">0</b></div>
+        </div>
+        <div class="panel">
+          <h3>最近案件</h3>
+          <div class="tableWrap"><table id="recentCases"></table></div>
+        </div>
+      </section>
+
+      <section id="cases" class="page">
+        <div class="panel">
+          <div class="panelHead">
+            <h3>新增服務案件</h3>
+            <button onclick="createCase()">新增案件</button>
+          </div>
+          <div class="formGrid">
+            <input id="caseName" placeholder="民眾姓名" />
+            <input id="casePhone" placeholder="電話" />
+            <select id="caseCategory"></select>
+            <select id="casePriority"><option>一般</option><option>急件</option><option>非常急</option></select>
+            <input id="caseAddress" placeholder="地址" />
+            <input id="caseVillage" placeholder="里別" />
+            <textarea id="caseContent" placeholder="案件內容"></textarea>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>案件列表</h3>
+          <div class="tableWrap"><table id="caseTable"></table></div>
+        </div>
+      </section>
+
+      <section id="ai" class="page">
+        <div class="panel aiBox">
+          <h3>AI快速歸檔</h3>
+          <p>服務處阿姨接電話，只要把民眾說的話輸入進來，系統會先用本機規則歸檔；之後接上 Gemini Key 就可啟用真正 AI。</p>
+          <textarea id="aiInput" placeholder="例如：和平里東興路一段123號附近，水溝蓋壞掉，車子經過很危險，希望協助處理"></textarea>
+          <div class="actions">
+            <button onclick="runAIFiling()">AI歸檔並建立案件</button>
+            <button class="ghost" onclick="runAIFiling(false)">只分析不建案</button>
+          </div>
+          <pre id="aiResult"></pre>
+        </div>
+      </section>
+
+      <section id="citizens" class="page">
+        <div class="panel">
+          <h3>民眾資料</h3>
+          <div class="tableWrap"><table id="citizenTable"></table></div>
+        </div>
+      </section>
+
+      <section id="visits" class="page">
+        <div class="panel">
+          <div class="panelHead"><h3>外勤拜訪紀錄</h3><button onclick="createVisit()">新增拜訪</button></div>
+          <div class="formGrid">
+            <input id="visitName" placeholder="拜訪對象" />
+            <input id="visitAddress" placeholder="地址" />
+            <input id="visitVillage" placeholder="里別" />
+            <textarea id="visitContent" placeholder="拜訪內容"></textarea>
+          </div>
+          <div class="tableWrap"><table id="visitTable"></table></div>
+        </div>
+      </section>
+
+      <section id="schedule" class="page">
+        <div class="panel">
+          <div class="panelHead"><h3>行程管理</h3><button onclick="createSchedule()">新增行程</button></div>
+          <div class="formGrid">
+            <input id="schTitle" placeholder="行程標題" />
+            <input id="schDate" type="date" />
+            <input id="schTime" type="time" />
+            <input id="schLocation" placeholder="地點" />
+          </div>
+          <div class="tableWrap"><table id="scheduleTable"></table></div>
+        </div>
+      </section>
+
+      <section id="offices" class="page">
+        <div class="panel">
+          <h3>專屬團隊獨立系統</h3>
+          <p class="largeText">不是提供一套共用系統，而是為每一個政治服務團隊打造專屬的智慧服務管理平台。</p>
+          <div class="cards">
+            <div class="card"><span>專屬登入</span><b>獨立網址</b></div>
+            <div class="card"><span>資料隔離</span><b>互不共享</b></div>
+            <div class="card"><span>權限控管</span><b>分層管理</b></div>
+            <div class="card"><span>專屬AI</span><b>可客製</b></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="settings" class="page">
+        <div class="panel">
+          <h3>API設定</h3>
+          <p>請把 Apps Script 部署後的 Web App URL 填入 <code>app.js</code> 的 <code>API_URL</code>。</p>
+          <pre>const API_URL = "你的 Google Apps Script Web App URL";</pre>
+          <p>Gemini Key 目前可先空白。之後到 Google Sheet 的 Settings 分頁填入 GEMINI_API_KEY，並把 AI_ENABLED 改成 true。</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
+
+這就是我說的問題。
+
+不是 CSS，而是 HTML 架構太像 2018 年後台。
+
+例如你現在：
+
+Topbar
+
+↓
+
+Banner
+
+↓
+
+四個卡片
+
+↓
+
+Table
+這就是 AdminLTE、Bootstrap 的思維。
+
+我如果重寫 HTML
+首頁會完全不一樣。
+
+例如：
+
+────────────────────────────────────
+LOGO
+江肇國服務團隊
+
+服務案件智慧管理平台
+
+👤 主任
+🔔 通知
+────────────────────────────────────
+
+██████████████████████████████
+(整張 Banner)
+██████████████████████████████
+
+做事的人，
+讓每一件服務案件都有追蹤。
+
+[新增案件]
+[AI快速歸檔]
+
+────────────────────────────────────
+
+今天工作
+──────────────
+
+今天案件
+
+今日拜訪
+
+今日行程
+
+AI提醒
+
+────────────────────────────────────
+
+🤖 AI快速歸檔
+
+直接貼電話內容
+
+↓
+
+AI分析
+
+↓
+
+建立案件
+
+────────────────────────────────────
+
+最近案件
+
+────────────────────────────────────
+
+案件地圖
+
+────────────────────────────────────
+
+本月統計
+你會發現：
+
+沒有一開始就一堆 Table。
+
+左邊也會全部改
+不要
+
+🏠 儀表板
+
+📋 服務案件
+我要改
+
+江肇國服務團隊
+
+──────────────
+
+首頁
+
+服務案件
+
+AI快速歸檔
+
+民眾CRM
+
+案件地圖
+
+今日工作
+
+統計中心
+
+設定
+下面再放
+
+做事的人
+
+讓每件案件都有追蹤
+Logo。
+
+Banner
+現在
+
+<div>
+
+<h2>
+
+<p>
+
+</div>
+
+<img>
+很醜。
+
+我要改
+
+左邊
+
+Logo
+
+服務案件智慧管理平台
+
+做事的人，
+讓每一件服務案件都有追蹤。
+
+按鈕
+
+右邊
+
+整張 Banner
+
+沒有裁切
+
+直接滿版
+Dashboard
+不是
+
+總案件
+
+今日新增
+
+AI
+我要變
+
+今天工作
+
+──────────────
+
+待受理
+
+處理中
+
+今日拜訪
+
+今日行程
+
+AI待整理
+
+昨日完成
+看起來像真正每天工作的首頁。
+
+AI快速歸檔
+不是 textarea
+
+我要做
+
+像 ChatGPT
+
+貼上電話內容
+
+──────────────
+
+分析中
+
+──────────────
+
+案件摘要
+
+分類
+
+承辦
+
+地址
+
+建立案件
+我建議直接砍掉這個 HTML。
+不要修。
+
+因為它的骨架就是傳統管理系統。
+
+我準備直接幫你重寫一份
+不是修改。
+
+而是：
+
+index.html 約 1800 行
+
+style.css 約 2500 行
+
+app.js 約 2200 行
+
+做到像 Linear + Stripe + Apple + Vercel 的 SaaS 質感，而且會直接套用你的：
+
+logo.png
+
+banner.png
+
+所有頁面都會統一品牌風格，而不是只有首頁放一張 Banner。這樣才符合你要拿去 Demo、之後賣給不同服務團隊的產品定位。
+
+
+你這個直接幫我 讓我在這裡複製貼上 <!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>服務案件智慧管理平台</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <img src="assets/logo.png" onerror="this.style.display='none'" />
+        <div>
+          <b id="brandName">江肇國服務團隊</b>
+          <span>服務案件智慧管理平台</span>
+        </div>
+      </div>
+      <button class="nav active" data-page="dashboard">🏠 儀表板</button>
+      <button class="nav" data-page="cases">📋 服務案件</button>
+      <button class="nav" data-page="ai">🤖 AI快速歸檔</button>
+      <button class="nav" data-page="citizens">👥 民眾資料</button>
+      <button class="nav" data-page="visits">🚶 外勤拜訪</button>
+      <button class="nav" data-page="schedule">📅 行程</button>
+      <button class="nav" data-page="offices">🏢 專屬團隊</button>
+      <button class="nav" data-page="settings">⚙️ 系統設定</button>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button id="menuBtn">☰</button>
+        <div>
+          <h1 id="pageTitle">儀表板</h1>
+          <p>接電話 → 輸入重點 → AI歸檔 → 一鍵建案 → 後續追蹤</p>
+        </div>
+        <div class="apiStatus" id="apiStatus">未連線</div>
+      </header>
+
+      <section class="hero">
+        <div>
+          <h2>服務案件智慧管理平台</h2>
+          <p>為每個服務團隊打造專屬、獨立、安全的案件管理系統。</p>
+        </div>
+        <img src="assets/banner.png" onerror="this.style.display='none'" />
+      </section>
+
+      <section id="dashboard" class="page active">
+        <div class="cards">
+          <div class="card"><span>總案件</span><b id="totalCases">0</b></div>
+          <div class="card"><span>今日新增</span><b id="todayCases">0</b></div>
+          <div class="card"><span>處理中</span><b id="processingCases">0</b></div>
+          <div class="card"><span>AI已歸檔</span><b id="aiFiledCases">0</b></div>
+        </div>
+        <div class="panel">
+          <h3>最近案件</h3>
+          <div class="tableWrap"><table id="recentCases"></table></div>
+        </div>
+      </section>
+
+      <section id="cases" class="page">
+        <div class="panel">
+          <div class="panelHead">
+            <h3>新增服務案件</h3>
+            <button onclick="createCase()">新增案件</button>
+          </div>
+          <div class="formGrid">
+            <input id="caseName" placeholder="民眾姓名" />
+            <input id="casePhone" placeholder="電話" />
+            <select id="caseCategory"></select>
+            <select id="casePriority"><option>一般</option><option>急件</option><option>非常急</option></select>
+            <input id="caseAddress" placeholder="地址" />
+            <input id="caseVillage" placeholder="里別" />
+            <textarea id="caseContent" placeholder="案件內容"></textarea>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>案件列表</h3>
+          <div class="tableWrap"><table id="caseTable"></table></div>
+        </div>
+      </section>
+
+      <section id="ai" class="page">
+        <div class="panel aiBox">
+          <h3>AI快速歸檔</h3>
+          <p>服務處阿姨接電話，只要把民眾說的話輸入進來，系統會先用本機規則歸檔；之後接上 Gemini Key 就可啟用真正 AI。</p>
+          <textarea id="aiInput" placeholder="例如：和平里東興路一段123號附近，水溝蓋壞掉，車子經過很危險，希望協助處理"></textarea>
+          <div class="actions">
+            <button onclick="runAIFiling()">AI歸檔並建立案件</button>
+            <button class="ghost" onclick="runAIFiling(false)">只分析不建案</button>
+          </div>
+          <pre id="aiResult"></pre>
+        </div>
+      </section>
+
+      <section id="citizens" class="page">
+        <div class="panel">
+          <h3>民眾資料</h3>
+          <div class="tableWrap"><table id="citizenTable"></table></div>
+        </div>
+      </section>
+
+      <section id="visits" class="page">
+        <div class="panel">
+          <div class="panelHead"><h3>外勤拜訪紀錄</h3><button onclick="createVisit()">新增拜訪</button></div>
+          <div class="formGrid">
+            <input id="visitName" placeholder="拜訪對象" />
+            <input id="visitAddress" placeholder="地址" />
+            <input id="visitVillage" placeholder="里別" />
+            <textarea id="visitContent" placeholder="拜訪內容"></textarea>
+          </div>
+          <div class="tableWrap"><table id="visitTable"></table></div>
+        </div>
+      </section>
+
+      <section id="schedule" class="page">
+        <div class="panel">
+          <div class="panelHead"><h3>行程管理</h3><button onclick="createSchedule()">新增行程</button></div>
+          <div class="formGrid">
+            <input id="schTitle" placeholder="行程標題" />
+            <input id="schDate" type="date" />
+            <input id="schTime" type="time" />
+            <input id="schLocation" placeholder="地點" />
+          </div>
+          <div class="tableWrap"><table id="scheduleTable"></table></div>
+        </div>
+      </section>
+
+      <section id="offices" class="page">
+        <div class="panel">
+          <h3>專屬團隊獨立系統</h3>
+          <p class="largeText">不是提供一套共用系統，而是為每一個政治服務團隊打造專屬的智慧服務管理平台。</p>
+          <div class="cards">
+            <div class="card"><span>專屬登入</span><b>獨立網址</b></div>
+            <div class="card"><span>資料隔離</span><b>互不共享</b></div>
+            <div class="card"><span>權限控管</span><b>分層管理</b></div>
+            <div class="card"><span>專屬AI</span><b>可客製</b></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="settings" class="page">
+        <div class="panel">
+          <h3>API設定</h3>
+          <p>請把 Apps Script 部署後的 Web App URL 填入 <code>app.js</code> 的 <code>API_URL</code>。</p>
+          <pre>const API_URL = "你的 Google Apps Script Web App URL";</pre>
+          <p>Gemini Key 目前可先空白。之後到 Google Sheet 的 Settings 分頁填入 GEMINI_API_KEY，並把 AI_ENABLED 改成 true。</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
+
+已思考 2 秒鐘
+下面這份直接整個覆蓋你的 index.html。
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>服務案件智慧管理平台</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="shell" id="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="brandBlock">
+        <img class="brandLogo" src="assets/logo.png" alt="江肇國服務團隊 Logo" onerror="this.style.display='none'" />
+        <div>
+          <strong id="brandName">江肇國服務團隊</strong>
+          <span>Service Case AI</span>
+        </div>
+      </div>
+
+      <nav class="navList">
+        <button class="nav active" data-page="dashboard">首頁儀表板</button>
+        <button class="nav" data-page="cases">服務案件</button>
+        <button class="nav" data-page="ai">AI 快速歸檔</button>
+        <button class="nav" data-page="citizens">民眾 CRM</button>
+        <button class="nav" data-page="visits">外勤拜訪</button>
+        <button class="nav" data-page="schedule">今日行程</button>
+        <button class="nav" data-page="offices">專屬團隊</button>
+        <button class="nav" data-page="settings">系統設定</button>
+      </nav>
+
+      <div class="sideCard">
+        <span>江肇國服務團隊</span>
+        <b>做事的人</b>
+        <p>讓每一件民眾服務案件，都能被記錄、追蹤、回覆與結案。</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="menuBtn" id="menuBtn">☰</button>
+
+        <div>
+          <h1 id="pageTitle">首頁儀表板</h1>
+          <p>接電話 → 輸入重點 → AI 歸檔 → 一鍵建案 → 後續追蹤</p>
+        </div>
+
+        <div class="topActions">
+          <div class="apiStatus" id="apiStatus">未連線</div>
+          <button class="small" onclick="showPage('ai')">AI 歸檔</button>
+        </div>
+      </header>
+
+      <section class="hero">
+        <div class="heroText">
+          <span class="eyebrow">Smart Service Platform</span>
+          <h2>服務案件智慧管理平台</h2>
+          <p>
+            為每個政治服務團隊打造專屬、獨立、安全的案件管理系統。
+            從電話紀錄、民眾陳情、外勤拜訪到案件追蹤，一站式完成。
+          </p>
+
+          <div class="heroBtns">
+            <button onclick="showPage('cases')">新增服務案件</button>
+            <button class="ghost" onclick="showPage('ai')">AI 快速歸檔</button>
+          </div>
+        </div>
+
+        <div class="heroVisual">
+          <img src="assets/banner.png" alt="服務案件智慧管理平台 Banner" onerror="this.style.display='none'" />
+        </div>
+      </section>
+
+      <section id="dashboard" class="page active">
+        <div class="statsGrid">
+          <div class="statCard accent">
+            <span>總服務案件</span>
+            <b id="totalCases">0</b>
+            <small>累計案件資料</small>
+          </div>
+          <div class="statCard">
+            <span>今日新增</span>
+            <b id="todayCases">0</b>
+            <small>今日民眾服務</small>
+          </div>
+          <div class="statCard">
+            <span>處理中</span>
+            <b id="processingCases">0</b>
+            <small>尚待追蹤案件</small>
+          </div>
+          <div class="statCard">
+            <span>AI 已歸檔</span>
+            <b id="aiFiledCases">0</b>
+            <small>AI 協助整理</small>
+          </div>
+        </div>
+
+        <div class="gridTwo">
+          <div class="panel">
+            <div class="panelHead">
+              <div>
+                <h3>最近服務案件</h3>
+                <p>快速掌握最新民眾陳情與處理狀態。</p>
+              </div>
+              <button class="ghost small" onclick="showPage('cases')">查看全部</button>
+            </div>
+
+            <div class="tableWrap">
+              <table id="recentCases"></table>
+            </div>
+          </div>
+
+          <div class="panel aiPreview">
+            <span class="eyebrow">AI Filing</span>
+            <h3>服務處阿姨接電話，也能快速建案</h3>
+            <p>
+              只要把民眾說的話貼進來，系統會自動判斷分類、地點、急迫程度與建議承辦單位。
+            </p>
+
+            <div class="flow">
+              <span>電話紀錄</span>
+              <span>AI 分類</span>
+              <span>案件摘要</span>
+              <span>一鍵建案</span>
+            </div>
+
+            <button onclick="showPage('ai')">開始 AI 快速歸檔</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="cases" class="page">
+        <div class="pageHero compact">
+          <span class="eyebrow">Case Management</span>
+          <h2>服務案件管理</h2>
+          <p>新增、指派、追蹤與管理每一件民眾服務案件。</p>
+        </div>
+
+        <div class="panel">
+          <div class="panelHead">
+            <div>
+              <h3>新增服務案件</h3>
+              <p>適合服務處接電話、現場民眾陳情或助理手動建案。</p>
+            </div>
+            <button onclick="createCase()">新增案件</button>
+          </div>
+
+          <div class="formGrid">
+            <input id="caseName" placeholder="民眾姓名" />
+            <input id="casePhone" placeholder="聯絡電話" />
+            <select id="caseCategory"></select>
+            <select id="casePriority">
+              <option>一般</option>
+              <option>急件</option>
+              <option>非常急</option>
+            </select>
+            <input id="caseAddress" placeholder="案件地址" />
+            <input id="caseVillage" placeholder="里別 / 行政區" />
+            <textarea id="caseContent" placeholder="請輸入案件內容，例如：民眾反映家門口水溝蓋破損，車輛經過有安全疑慮。"></textarea>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panelHead">
+            <div>
+              <h3>案件列表</h3>
+              <p>所有服務案件的追蹤紀錄。</p>
+            </div>
+          </div>
+          <div class="tableWrap">
+            <table id="caseTable"></table>
+          </div>
+        </div>
+      </section>
+
+      <section id="ai" class="page">
+        <div class="pageHero compact">
+          <span class="eyebrow">AI Quick Filing</span>
+          <h2>AI 快速歸檔</h2>
+          <p>把電話紀錄、LINE 訊息、逐字稿貼進來，AI 會協助整理成正式案件。</p>
+        </div>
+
+        <div class="gridTwo">
+          <div class="panel aiWorkPanel">
+            <div class="panelHead">
+              <div>
+                <h3>貼上民眾陳情內容</h3>
+                <p>目前沒有 Gemini Key 也能先用本機規則歸檔；之後接上 Key 可升級真正 AI 分析。</p>
+              </div>
+            </div>
+
+            <textarea id="aiInput" placeholder="例如：和平里東興路一段123號附近，水溝蓋壞掉，車子經過很危險，希望協助處理。"></textarea>
+
+            <div class="actions">
+              <button onclick="runAIFiling()">AI 歸檔並建立案件</button>
+              <button class="ghost" onclick="runAIFiling(false)">只分析不建案</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panelHead">
+              <div>
+                <h3>AI 分析結果</h3>
+                <p>分類、摘要、地址、承辦單位與建議動作會顯示在這裡。</p>
+              </div>
+            </div>
+            <pre id="aiResult">等待輸入內容...</pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="citizens" class="page">
+        <div class="pageHero compact">
+          <span class="eyebrow">Citizen CRM</span>
+          <h2>民眾資料 CRM</h2>
+          <p>整理民眾聯絡資訊、歷史案件與服務紀錄。</p>
+        </div>
+
+        <div class="panel">
+          <div class="panelHead">
+            <div>
+              <h3>民眾資料</h3>
+              <p>讓服務團隊知道每位民眾曾經反映過哪些問題。</p>
+            </div>
+          </div>
+          <div class="tableWrap">
+            <table id="citizenTable"></table>
+          </div>
+        </div>
+      </section>
+
+      <section id="visits" class="page">
+        <div class="pageHero compact">
+          <span class="eyebrow">Field Visit</span>
+          <h2>外勤拜訪紀錄</h2>
+          <p>記錄拜訪里長、社區主委、民眾與地方關係人的服務歷程。</p>
+        </div>
+
+        <div class="panel">
+          <div class="panelHead">
+            <div>
+              <h3>新增拜訪紀錄</h3>
+              <p>可記錄拜訪對象、地點、里別與後續追蹤事項。</p>
+            </div>
+            <button onclick="createVisit()">新增拜訪</button>
+          </div>
+
+          <div class="formGrid">
+            <input id="visitName" placeholder="拜訪對象" />
+            <input id="visitAddress" placeholder="拜訪地址" />
+            <input id="visitVillage" placeholder="里別" />
+            <textarea id="visitContent" placeholder="拜訪內容 / 民眾反映 / 後續追蹤"></textarea>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>拜訪列表</h3>
+          <div class="tableWrap">
+            <table id="visitTable"></table>
+          </div>
+        </div>
+      </section>
+
+      <section id="schedule" class="page">
+        <div class="pageHero compact">
+          <span class="eyebrow">Schedule</span>
+          <h2>今日行程管理</h2>
+          <p>管理會勘、服務行程、地方拜訪與團隊工作排程。</p>
+        </div>
+
+        <div class="panel">
+          <div class="panelHead">
+            <div>
+              <h3>新增行程</h3>
+              <p>建立服務團隊的日常行程與提醒。</p>
+            </div>
+            <button onclick="createSchedule()">新增行程</button>
+          </div>
+
+          <div class="formGrid">
+            <input id="schTitle" placeholder="行程標題" />
+            <input id="schDate" type="date" />
+            <input id="schTime" type="time" />
+            <input id="schLocation" placeholder="地點" />
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>行程列表</h3>
+          <div class="tableWrap">
+            <table id="scheduleTable"></table>
+          </div>
+        </div>
+      </section>
+
+      <section id="offices" class="page">
+        <div class="pageHero compact">
+          <span class="eyebrow">Dedicated Workspace</span>
+          <h2>專屬團隊獨立系統</h2>
+          <p>不是提供一套共用系統，而是為每一個政治服務團隊打造專屬的智慧服務管理平台。</p>
+        </div>
+
+        <div class="featureGrid">
+          <div class="feature">
+            <b>專屬登入網址</b>
+            <p>每個團隊可擁有自己的入口、品牌名稱、Logo 與主色系。</p>
+          </div>
+
+          <div class="feature">
+            <b>資料完全隔離</b>
+            <p>不同服務團隊之間資料互不共享，降低資料外洩與誤用風險。</p>
+          </div>
+
+          <div class="feature">
+            <b>角色權限控管</b>
+            <p>主任、助理、外勤、檢視者可分層管理，控制資料查看與操作範圍。</p>
+          </div>
+
+          <div class="feature">
+            <b>專屬 AI 助理</b>
+            <p>可依服務團隊的案件分類、常見承辦單位與行政區域進行客製。</p>
+          </div>
+
+          <div class="feature">
+            <b>多服務處協作</b>
+            <p>總服務處、地方服務站、議會研究室可共同追蹤案件進度。</p>
+          </div>
+
+          <div class="feature">
+            <b>可擴充 SaaS</b>
+            <p>未來可複製給不同議員、立委、村里長或地方服務團隊使用。</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="settings" class="page">
+        <div class="pageHero compact">
+          <span class="eyebrow">System Settings</span>
+          <h2>系統設定</h2>
+          <p>串接 Google Sheet、Apps Script、Gemini API 與未來 LINE 官方帳號。</p>
+        </div>
+
+        <div class="panel">
+          <h3>API 設定</h3>
+          <p class="largeText">
+            請把 Apps Script 部署後的 Web App URL 填入 <code>app.js</code> 的 <code>API_URL</code>。
+          </p>
+
+          <pre>const API_URL = "你的 Google Apps Script Web App URL";</pre>
+
+          <p class="largeText">
+            Gemini Key 目前可先空白。之後到 Google Sheet 的 <code>Settings</code> 分頁填入
+            <code>GEMINI_API_KEY</code>，並把 <code>AI_ENABLED</code> 改成 <code>true</code>。
+          </p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
+
+
+已貼上文字 (1)(43).txt
+文件
+現在的骨頭看起來是可以納css就完全泰單雕了 而且我的logo跟banner一樣沒有帶入喔 
+
+已思考 7s
+對，問題抓到了：你現在 HTML 跟 CSS 的 class 名稱沒有對上。
+
+你現在 CSS 是寫：
+
+.shell
+.brandBlock
+.brandLogo
+.navList
+.heroText
+.heroVisual
+.statsGrid
+.statCard
+但你舊 HTML 還是：
+
+#app
+.brand
+.cards
+.card
+.hero > div
+.hero > img
+所以 CSS 當然看起來「單調」，因為很多樣式根本沒吃到。你上傳的 CSS 確實是新版骨架，但 HTML 沒完全對應。
+
+
+Logo / Banner 沒帶入通常是這兩個原因：
+
+assets/logo.png
+assets/banner.png
+檔名一定要完全一樣，大小寫也要一樣。
+
+資料夾要長這樣：
+
+專案資料夾
+├── index.html
+├── style.css
+├── app.js
+└── assets
+    ├── logo.png
+    └── banner.png
+你現在不要修 CSS，先把我剛剛給你的新版 index.html 整份覆蓋，因為那份才有：
+
+<div class="shell" id="app">
+<div class="brandBlock">
+<img class="brandLogo" src="assets/logo.png">
+<div class="heroText">
+<div class="heroVisual">
+<img src="assets/banner.png">
+<div class="statsGrid">
+<div class="statCard">
+這樣才會真正吃到你現在這份 CSS。
+
+最重要一句：
+不是圖片壞，是 HTML class 跟 CSS class 沒對上。
+
+
+css來 讓我完全貼上
+
+下面整份覆蓋 style.css。
+
 :root{
   --green:#0B6B43;
   --greenDark:#063D2A;
@@ -645,4 +3663,4 @@ code{
 
   .heroBtns button{width:100%}
 }
-```
+
