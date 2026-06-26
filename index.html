@@ -11,7 +11,12 @@
   <div class="shell" id="app">
     <aside class="sidebar" id="sidebar">
       <div class="brandBlock">
-        <img class="brandLogo" src="assets/logo.png" alt="江肇國服務團隊 Logo" onerror="this.style.display='none'" />
+        <img
+          class="brandLogo"
+          src="assets/logo.png"
+          alt="江肇國服務團隊 Logo"
+          onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22 viewBox=%220 0 120 120%22><rect width=%22120%22 height=%22120%22 rx=%2228%22 fill=%22%230B6B43%22/><path d=%22M60 18L96 34V58C96 82 81 101 60 108C39 101 24 82 24 58V34L60 18Z%22 fill=%22white%22/><path d=%22M43 64C47 46 62 40 78 38C76 59 64 76 43 82C48 70 56 60 67 52C56 56 48 61 43 64Z%22 fill=%22%230B6B43%22/></svg>'"
+        />
         <div>
           <strong id="brandName">江肇國服務團隊</strong>
           <span>Service Case AI</span>
@@ -51,27 +56,31 @@
         </div>
       </header>
 
-      <section class="hero">
-        <div class="heroText">
-          <span class="eyebrow">Smart Service Platform</span>
-          <h2>服務案件智慧管理平台</h2>
-          <p>
-            為每個政治服務團隊打造專屬、獨立、安全的案件管理系統。
-            從電話紀錄、民眾陳情、外勤拜訪到案件追蹤，一站式完成。
-          </p>
-
-          <div class="heroBtns">
-            <button onclick="showPage('cases')">新增服務案件</button>
-            <button class="ghost" onclick="showPage('ai')">AI 快速歸檔</button>
-          </div>
-        </div>
-
-        <div class="heroVisual">
-          <img src="assets/banner.png" alt="服務案件智慧管理平台 Banner" onerror="this.style.display='none'" />
-        </div>
-      </section>
-
       <section id="dashboard" class="page active">
+        <section class="hero">
+          <div class="heroText">
+            <span class="eyebrow">Smart Service Platform</span>
+            <h2>服務案件智慧管理平台</h2>
+            <p>
+              為每個政治服務團隊打造專屬、獨立、安全的案件管理系統。
+              從電話紀錄、民眾陳情、外勤拜訪到案件追蹤，一站式完成。
+            </p>
+
+            <div class="heroBtns">
+              <button onclick="showPage('cases')">新增服務案件</button>
+              <button class="ghost" onclick="showPage('ai')">AI 快速歸檔</button>
+            </div>
+          </div>
+
+          <div class="heroVisual">
+            <img
+              src="assets/banner.png"
+              alt="服務案件智慧管理平台 Banner"
+              onerror="this.outerHTML='<div style=&quot;height:100%;min-height:280px;display:flex;align-items:center;justify-content:center;text-align:center;padding:30px;color:#0B6B43;font-weight:900;background:linear-gradient(135deg,#fff,#EAF6EF);&quot;>請將主視覺圖片命名為<br>assets/banner.png</div>'"
+            />
+          </div>
+        </section>
+
         <div class="statsGrid">
           <div class="statCard accent">
             <span>總服務案件</span>
@@ -112,7 +121,7 @@
 
           <div class="panel aiPreview">
             <span class="eyebrow">AI Filing</span>
-            <h3>服務處阿姨接電話，也能快速建案</h3>
+            <h3>服務處接電話，也能快速建案</h3>
             <p>
               只要把民眾說的話貼進來，系統會自動判斷分類、地點、急迫程度與建議承辦單位。
             </p>
