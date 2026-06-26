@@ -6,144 +6,352 @@
   <title>服務案件智慧管理平台</title>
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-  <div id="app">
+  <div class="shell" id="app">
     <aside class="sidebar" id="sidebar">
-      <div class="brand">
-        <img src="assets/logo.png" onerror="this.style.display='none'" />
+      <div class="brandBlock">
+        <img class="brandLogo" src="assets/logo.png" alt="江肇國服務團隊 Logo" onerror="this.style.display='none'" />
         <div>
-          <b id="brandName">江肇國服務團隊</b>
-          <span>服務案件智慧管理平台</span>
+          <strong id="brandName">江肇國服務團隊</strong>
+          <span>Service Case AI</span>
         </div>
       </div>
-      <button class="nav active" data-page="dashboard">🏠 儀表板</button>
-      <button class="nav" data-page="cases">📋 服務案件</button>
-      <button class="nav" data-page="ai">🤖 AI快速歸檔</button>
-      <button class="nav" data-page="citizens">👥 民眾資料</button>
-      <button class="nav" data-page="visits">🚶 外勤拜訪</button>
-      <button class="nav" data-page="schedule">📅 行程</button>
-      <button class="nav" data-page="offices">🏢 專屬團隊</button>
-      <button class="nav" data-page="settings">⚙️ 系統設定</button>
+
+      <nav class="navList">
+        <button class="nav active" data-page="dashboard">首頁儀表板</button>
+        <button class="nav" data-page="cases">服務案件</button>
+        <button class="nav" data-page="ai">AI 快速歸檔</button>
+        <button class="nav" data-page="citizens">民眾 CRM</button>
+        <button class="nav" data-page="visits">外勤拜訪</button>
+        <button class="nav" data-page="schedule">今日行程</button>
+        <button class="nav" data-page="offices">專屬團隊</button>
+        <button class="nav" data-page="settings">系統設定</button>
+      </nav>
+
+      <div class="sideCard">
+        <span>江肇國服務團隊</span>
+        <b>做事的人</b>
+        <p>讓每一件民眾服務案件，都能被記錄、追蹤、回覆與結案。</p>
+      </div>
     </aside>
 
     <main class="main">
       <header class="topbar">
-        <button id="menuBtn">☰</button>
+        <button class="menuBtn" id="menuBtn">☰</button>
+
         <div>
-          <h1 id="pageTitle">儀表板</h1>
-          <p>接電話 → 輸入重點 → AI歸檔 → 一鍵建案 → 後續追蹤</p>
+          <h1 id="pageTitle">首頁儀表板</h1>
+          <p>接電話 → 輸入重點 → AI 歸檔 → 一鍵建案 → 後續追蹤</p>
         </div>
-        <div class="apiStatus" id="apiStatus">未連線</div>
+
+        <div class="topActions">
+          <div class="apiStatus" id="apiStatus">未連線</div>
+          <button class="small" onclick="showPage('ai')">AI 歸檔</button>
+        </div>
       </header>
 
       <section class="hero">
-        <div>
+        <div class="heroText">
+          <span class="eyebrow">Smart Service Platform</span>
           <h2>服務案件智慧管理平台</h2>
-          <p>為每個服務團隊打造專屬、獨立、安全的案件管理系統。</p>
+          <p>
+            為每個政治服務團隊打造專屬、獨立、安全的案件管理系統。
+            從電話紀錄、民眾陳情、外勤拜訪到案件追蹤，一站式完成。
+          </p>
+
+          <div class="heroBtns">
+            <button onclick="showPage('cases')">新增服務案件</button>
+            <button class="ghost" onclick="showPage('ai')">AI 快速歸檔</button>
+          </div>
         </div>
-        <img src="assets/banner.png" onerror="this.style.display='none'" />
+
+        <div class="heroVisual">
+          <img src="assets/banner.png" alt="服務案件智慧管理平台 Banner" onerror="this.style.display='none'" />
+        </div>
       </section>
 
       <section id="dashboard" class="page active">
-        <div class="cards">
-          <div class="card"><span>總案件</span><b id="totalCases">0</b></div>
-          <div class="card"><span>今日新增</span><b id="todayCases">0</b></div>
-          <div class="card"><span>處理中</span><b id="processingCases">0</b></div>
-          <div class="card"><span>AI已歸檔</span><b id="aiFiledCases">0</b></div>
+        <div class="statsGrid">
+          <div class="statCard accent">
+            <span>總服務案件</span>
+            <b id="totalCases">0</b>
+            <small>累計案件資料</small>
+          </div>
+          <div class="statCard">
+            <span>今日新增</span>
+            <b id="todayCases">0</b>
+            <small>今日民眾服務</small>
+          </div>
+          <div class="statCard">
+            <span>處理中</span>
+            <b id="processingCases">0</b>
+            <small>尚待追蹤案件</small>
+          </div>
+          <div class="statCard">
+            <span>AI 已歸檔</span>
+            <b id="aiFiledCases">0</b>
+            <small>AI 協助整理</small>
+          </div>
         </div>
-        <div class="panel">
-          <h3>最近案件</h3>
-          <div class="tableWrap"><table id="recentCases"></table></div>
+
+        <div class="gridTwo">
+          <div class="panel">
+            <div class="panelHead">
+              <div>
+                <h3>最近服務案件</h3>
+                <p>快速掌握最新民眾陳情與處理狀態。</p>
+              </div>
+              <button class="ghost small" onclick="showPage('cases')">查看全部</button>
+            </div>
+
+            <div class="tableWrap">
+              <table id="recentCases"></table>
+            </div>
+          </div>
+
+          <div class="panel aiPreview">
+            <span class="eyebrow">AI Filing</span>
+            <h3>服務處阿姨接電話，也能快速建案</h3>
+            <p>
+              只要把民眾說的話貼進來，系統會自動判斷分類、地點、急迫程度與建議承辦單位。
+            </p>
+
+            <div class="flow">
+              <span>電話紀錄</span>
+              <span>AI 分類</span>
+              <span>案件摘要</span>
+              <span>一鍵建案</span>
+            </div>
+
+            <button onclick="showPage('ai')">開始 AI 快速歸檔</button>
+          </div>
         </div>
       </section>
 
       <section id="cases" class="page">
+        <div class="pageHero compact">
+          <span class="eyebrow">Case Management</span>
+          <h2>服務案件管理</h2>
+          <p>新增、指派、追蹤與管理每一件民眾服務案件。</p>
+        </div>
+
         <div class="panel">
           <div class="panelHead">
-            <h3>新增服務案件</h3>
+            <div>
+              <h3>新增服務案件</h3>
+              <p>適合服務處接電話、現場民眾陳情或助理手動建案。</p>
+            </div>
             <button onclick="createCase()">新增案件</button>
           </div>
+
           <div class="formGrid">
             <input id="caseName" placeholder="民眾姓名" />
-            <input id="casePhone" placeholder="電話" />
+            <input id="casePhone" placeholder="聯絡電話" />
             <select id="caseCategory"></select>
-            <select id="casePriority"><option>一般</option><option>急件</option><option>非常急</option></select>
-            <input id="caseAddress" placeholder="地址" />
-            <input id="caseVillage" placeholder="里別" />
-            <textarea id="caseContent" placeholder="案件內容"></textarea>
+            <select id="casePriority">
+              <option>一般</option>
+              <option>急件</option>
+              <option>非常急</option>
+            </select>
+            <input id="caseAddress" placeholder="案件地址" />
+            <input id="caseVillage" placeholder="里別 / 行政區" />
+            <textarea id="caseContent" placeholder="請輸入案件內容，例如：民眾反映家門口水溝蓋破損，車輛經過有安全疑慮。"></textarea>
           </div>
         </div>
+
         <div class="panel">
-          <h3>案件列表</h3>
-          <div class="tableWrap"><table id="caseTable"></table></div>
+          <div class="panelHead">
+            <div>
+              <h3>案件列表</h3>
+              <p>所有服務案件的追蹤紀錄。</p>
+            </div>
+          </div>
+          <div class="tableWrap">
+            <table id="caseTable"></table>
+          </div>
         </div>
       </section>
 
       <section id="ai" class="page">
-        <div class="panel aiBox">
-          <h3>AI快速歸檔</h3>
-          <p>服務處阿姨接電話，只要把民眾說的話輸入進來，系統會先用本機規則歸檔；之後接上 Gemini Key 就可啟用真正 AI。</p>
-          <textarea id="aiInput" placeholder="例如：和平里東興路一段123號附近，水溝蓋壞掉，車子經過很危險，希望協助處理"></textarea>
-          <div class="actions">
-            <button onclick="runAIFiling()">AI歸檔並建立案件</button>
-            <button class="ghost" onclick="runAIFiling(false)">只分析不建案</button>
+        <div class="pageHero compact">
+          <span class="eyebrow">AI Quick Filing</span>
+          <h2>AI 快速歸檔</h2>
+          <p>把電話紀錄、LINE 訊息、逐字稿貼進來，AI 會協助整理成正式案件。</p>
+        </div>
+
+        <div class="gridTwo">
+          <div class="panel aiWorkPanel">
+            <div class="panelHead">
+              <div>
+                <h3>貼上民眾陳情內容</h3>
+                <p>目前沒有 Gemini Key 也能先用本機規則歸檔；之後接上 Key 可升級真正 AI 分析。</p>
+              </div>
+            </div>
+
+            <textarea id="aiInput" placeholder="例如：和平里東興路一段123號附近，水溝蓋壞掉，車子經過很危險，希望協助處理。"></textarea>
+
+            <div class="actions">
+              <button onclick="runAIFiling()">AI 歸檔並建立案件</button>
+              <button class="ghost" onclick="runAIFiling(false)">只分析不建案</button>
+            </div>
           </div>
-          <pre id="aiResult"></pre>
+
+          <div class="panel">
+            <div class="panelHead">
+              <div>
+                <h3>AI 分析結果</h3>
+                <p>分類、摘要、地址、承辦單位與建議動作會顯示在這裡。</p>
+              </div>
+            </div>
+            <pre id="aiResult">等待輸入內容...</pre>
+          </div>
         </div>
       </section>
 
       <section id="citizens" class="page">
+        <div class="pageHero compact">
+          <span class="eyebrow">Citizen CRM</span>
+          <h2>民眾資料 CRM</h2>
+          <p>整理民眾聯絡資訊、歷史案件與服務紀錄。</p>
+        </div>
+
         <div class="panel">
-          <h3>民眾資料</h3>
-          <div class="tableWrap"><table id="citizenTable"></table></div>
+          <div class="panelHead">
+            <div>
+              <h3>民眾資料</h3>
+              <p>讓服務團隊知道每位民眾曾經反映過哪些問題。</p>
+            </div>
+          </div>
+          <div class="tableWrap">
+            <table id="citizenTable"></table>
+          </div>
         </div>
       </section>
 
       <section id="visits" class="page">
+        <div class="pageHero compact">
+          <span class="eyebrow">Field Visit</span>
+          <h2>外勤拜訪紀錄</h2>
+          <p>記錄拜訪里長、社區主委、民眾與地方關係人的服務歷程。</p>
+        </div>
+
         <div class="panel">
-          <div class="panelHead"><h3>外勤拜訪紀錄</h3><button onclick="createVisit()">新增拜訪</button></div>
+          <div class="panelHead">
+            <div>
+              <h3>新增拜訪紀錄</h3>
+              <p>可記錄拜訪對象、地點、里別與後續追蹤事項。</p>
+            </div>
+            <button onclick="createVisit()">新增拜訪</button>
+          </div>
+
           <div class="formGrid">
             <input id="visitName" placeholder="拜訪對象" />
-            <input id="visitAddress" placeholder="地址" />
+            <input id="visitAddress" placeholder="拜訪地址" />
             <input id="visitVillage" placeholder="里別" />
-            <textarea id="visitContent" placeholder="拜訪內容"></textarea>
+            <textarea id="visitContent" placeholder="拜訪內容 / 民眾反映 / 後續追蹤"></textarea>
           </div>
-          <div class="tableWrap"><table id="visitTable"></table></div>
+        </div>
+
+        <div class="panel">
+          <h3>拜訪列表</h3>
+          <div class="tableWrap">
+            <table id="visitTable"></table>
+          </div>
         </div>
       </section>
 
       <section id="schedule" class="page">
+        <div class="pageHero compact">
+          <span class="eyebrow">Schedule</span>
+          <h2>今日行程管理</h2>
+          <p>管理會勘、服務行程、地方拜訪與團隊工作排程。</p>
+        </div>
+
         <div class="panel">
-          <div class="panelHead"><h3>行程管理</h3><button onclick="createSchedule()">新增行程</button></div>
+          <div class="panelHead">
+            <div>
+              <h3>新增行程</h3>
+              <p>建立服務團隊的日常行程與提醒。</p>
+            </div>
+            <button onclick="createSchedule()">新增行程</button>
+          </div>
+
           <div class="formGrid">
             <input id="schTitle" placeholder="行程標題" />
             <input id="schDate" type="date" />
             <input id="schTime" type="time" />
             <input id="schLocation" placeholder="地點" />
           </div>
-          <div class="tableWrap"><table id="scheduleTable"></table></div>
+        </div>
+
+        <div class="panel">
+          <h3>行程列表</h3>
+          <div class="tableWrap">
+            <table id="scheduleTable"></table>
+          </div>
         </div>
       </section>
 
       <section id="offices" class="page">
-        <div class="panel">
-          <h3>專屬團隊獨立系統</h3>
-          <p class="largeText">不是提供一套共用系統，而是為每一個政治服務團隊打造專屬的智慧服務管理平台。</p>
-          <div class="cards">
-            <div class="card"><span>專屬登入</span><b>獨立網址</b></div>
-            <div class="card"><span>資料隔離</span><b>互不共享</b></div>
-            <div class="card"><span>權限控管</span><b>分層管理</b></div>
-            <div class="card"><span>專屬AI</span><b>可客製</b></div>
+        <div class="pageHero compact">
+          <span class="eyebrow">Dedicated Workspace</span>
+          <h2>專屬團隊獨立系統</h2>
+          <p>不是提供一套共用系統，而是為每一個政治服務團隊打造專屬的智慧服務管理平台。</p>
+        </div>
+
+        <div class="featureGrid">
+          <div class="feature">
+            <b>專屬登入網址</b>
+            <p>每個團隊可擁有自己的入口、品牌名稱、Logo 與主色系。</p>
+          </div>
+
+          <div class="feature">
+            <b>資料完全隔離</b>
+            <p>不同服務團隊之間資料互不共享，降低資料外洩與誤用風險。</p>
+          </div>
+
+          <div class="feature">
+            <b>角色權限控管</b>
+            <p>主任、助理、外勤、檢視者可分層管理，控制資料查看與操作範圍。</p>
+          </div>
+
+          <div class="feature">
+            <b>專屬 AI 助理</b>
+            <p>可依服務團隊的案件分類、常見承辦單位與行政區域進行客製。</p>
+          </div>
+
+          <div class="feature">
+            <b>多服務處協作</b>
+            <p>總服務處、地方服務站、議會研究室可共同追蹤案件進度。</p>
+          </div>
+
+          <div class="feature">
+            <b>可擴充 SaaS</b>
+            <p>未來可複製給不同議員、立委、村里長或地方服務團隊使用。</p>
           </div>
         </div>
       </section>
 
       <section id="settings" class="page">
+        <div class="pageHero compact">
+          <span class="eyebrow">System Settings</span>
+          <h2>系統設定</h2>
+          <p>串接 Google Sheet、Apps Script、Gemini API 與未來 LINE 官方帳號。</p>
+        </div>
+
         <div class="panel">
-          <h3>API設定</h3>
-          <p>請把 Apps Script 部署後的 Web App URL 填入 <code>app.js</code> 的 <code>API_URL</code>。</p>
+          <h3>API 設定</h3>
+          <p class="largeText">
+            請把 Apps Script 部署後的 Web App URL 填入 <code>app.js</code> 的 <code>API_URL</code>。
+          </p>
+
           <pre>const API_URL = "你的 Google Apps Script Web App URL";</pre>
-          <p>Gemini Key 目前可先空白。之後到 Google Sheet 的 Settings 分頁填入 GEMINI_API_KEY，並把 AI_ENABLED 改成 true。</p>
+
+          <p class="largeText">
+            Gemini Key 目前可先空白。之後到 Google Sheet 的 <code>Settings</code> 分頁填入
+            <code>GEMINI_API_KEY</code>，並把 <code>AI_ENABLED</code> 改成 <code>true</code>。
+          </p>
         </div>
       </section>
     </main>
