@@ -776,3 +776,46 @@ select:focus{
     font-size:30px;
   }
 }
+
+.toastBox{
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  display:grid;
+  gap:10px;
+  z-index:9999;
+}
+
+.toast{
+  min-width:240px;
+  max-width:340px;
+  padding:14px 16px;
+  border-radius:18px;
+  background:#173C33;
+  color:#fff;
+  box-shadow:0 14px 34px rgba(0,0,0,.18);
+  animation:toastIn .22s ease;
+}
+
+.toast b{
+  display:block;
+  font-size:15px;
+  margin-bottom:4px;
+}
+
+.toast span{
+  display:block;
+  color:rgba(255,255,255,.78);
+  font-size:13px;
+  line-height:1.5;
+}
+
+.toast.hide{
+  opacity:0;
+  transform:translateY(8px);
+}
+
+@keyframes toastIn{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:none}
+}
