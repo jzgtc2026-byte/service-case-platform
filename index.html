@@ -3,574 +3,308 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>政治人物服務處智慧管理平台 V2</title>
+  <title>ASTREA Office OS｜案件管理</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-  <div class="appShell">
-    <!-- Sidebar -->
+  <div class="app">
     <aside class="sidebar">
       <div class="brand">
-        <div class="brandMark">江</div>
+        <div class="brandIcon">✦</div>
         <div>
-          <strong>江肇國服務處</strong>
-          <span>Service CRM V2</span>
+          <h1>ASTREA</h1>
+          <p>Office OS</p>
+          <span>Political Edition</span>
         </div>
       </div>
 
-      <nav class="navList">
-        <button class="nav active" data-page="dashboard">首頁總覽</button>
-        <button class="nav" data-page="cases">案件管理</button>
-        <button class="nav" data-page="archive">服務資料歸檔</button>
-        <button class="nav" data-page="interactions">地方互動</button>
-        <button class="nav" data-page="funerals">喪宅系統</button>
-        <button class="nav" data-page="contacts">地方聯絡人</button>
-        <button class="nav" data-page="calendar">行程管理</button>
-        <button class="nav" data-page="team">團隊管理</button>
-        <button class="nav" data-page="settings">系統設定</button>
+      <nav class="nav">
+        <button>工作首頁</button>
+        <button class="active">案件管理</button>
+        <button>服務資料歸檔</button>
+        <button>地方互動</button>
+        <button>喪宅系統</button>
+        <button>地方聯絡人</button>
+        <button>行程管理</button>
+        <button>團隊管理</button>
+        <button>系統設定</button>
       </nav>
 
-      <div class="sideCard">
-        <span>今日提醒</span>
-        <b>7 件待追蹤</b>
-        <p>案件、喪宅、地方互動與行程已整合到今日工作。</p>
+      <div class="todayCard">
+        <h3>今日工作</h3>
+        <div><span>案件</span><b>12</b></div>
+        <div><span>拜訪</span><b>5</b></div>
+        <div><span>喪宅</span><b>2</b></div>
+        <div><span>會勘</span><b>1</b></div>
+        <button>查看行程表</button>
+      </div>
+
+      <div class="userCard">
+        <div class="avatar">張</div>
+        <div>
+          <strong>張軒睿</strong>
+          <p>主任</p>
+          <span>● Online</span>
+        </div>
       </div>
     </aside>
 
-    <!-- Main -->
     <main class="main">
       <header class="topbar">
         <div>
-          <h1 id="pageTitle">首頁總覽</h1>
-          <p id="pageSubtitle">服務案件、地方互動、喪宅流程與團隊工作集中管理。</p>
+          <h2>早安，張軒睿 👋</h2>
+          <p>今天有 <b>48</b> 件案件需要追蹤，<b>12</b> 件今日工作</p>
+        </div>
+
+        <div class="topSearch">
+          <input placeholder="搜尋案件編號、姓名、電話、地址、關鍵字..." />
+          <kbd>⌘K</kbd>
         </div>
 
         <div class="topActions">
-          <button class="ghostBtn">搜尋</button>
-          <button class="primaryBtn">＋快速新增</button>
+          <button>🔔</button>
+          <button>📅</button>
+          <div class="miniUser">張軒睿</div>
         </div>
       </header>
 
-      <!-- Dashboard -->
-      <section id="dashboard" class="page active">
-        <div class="heroCard">
-          <div>
-            <span class="eyebrow">Today Overview</span>
-            <h2>早安，今天共有 12 件工作需要追蹤</h2>
-            <p>協助服務處快速掌握案件、行程、喪宅、地方互動與團隊負載。</p>
-          </div>
-          <button class="primaryBtn">查看今日工作</button>
-        </div>
-
-        <div class="statsGrid">
-          <div class="statCard"><span>處理中案件</span><b>48</b><small>較昨日 +3</small></div>
-          <div class="statCard"><span>今日新增</span><b>12</b><small>上午已新增 5 件</small></div>
-          <div class="statCard"><span>今日行程</span><b>9</b><small>含會勘與拜訪</small></div>
-          <div class="statCard warn"><span>待完成事項</span><b>7</b><small>需要優先處理</small></div>
-        </div>
-
-        <div class="gridTwo">
-          <div class="panel">
-            <div class="panelHead">
-              <div>
-                <h3>今日待辦</h3>
-                <p>服務處今天需要完成的重點工作。</p>
-              </div>
-            </div>
-
-            <div class="taskList">
-              <div><b>10:00 東興路會勘</b><span>道路坑洞｜阿明</span></div>
-              <div><b>回覆王先生案件</b><span>排水溝破損｜處理中</span></div>
-              <div><b>送輓聯與礦泉水</b><span>陳媽媽喪宅｜外勤組</span></div>
-              <div><b>整理地方互動紀錄</b><span>和平里主委拜訪</span></div>
-            </div>
-          </div>
-
-          <div class="panel">
-            <div class="panelHead">
-              <div>
-                <h3>最新案件</h3>
-                <p>依最後更新時間排序。</p>
-              </div>
-              <button class="ghostBtn">全部案件</button>
-            </div>
-
-            <div class="recordList">
-              <div class="recordItem">
-                <strong>CASE-240627001</strong>
-                <p>王先生｜排水溝破損</p>
-                <span class="badge orange">協調追蹤中</span>
-              </div>
-              <div class="recordItem">
-                <strong>CASE-240627002</strong>
-                <p>李小姐｜路燈不亮</p>
-                <span class="badge blue">已受理</span>
-              </div>
-              <div class="recordItem">
-                <strong>CASE-240627003</strong>
-                <p>陳先生｜道路坑洞</p>
-                <span class="badge green">已完成</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="gridTwo">
-          <div class="panel">
-            <h3>快速功能</h3>
-            <div class="quickGrid">
-              <button>＋新增案件</button>
-              <button>＋新增互動</button>
-              <button>＋新增喪宅</button>
-              <button>＋新增行程</button>
-            </div>
-          </div>
-
-          <div class="panel">
-            <h3>今日行程</h3>
-            <div class="timelineList">
-              <div><time>09:00</time><span>服務處晨會</span></div>
-              <div><time>10:30</time><span>東興路會勘</span></div>
-              <div><time>14:00</time><span>和平里主委拜訪</span></div>
-              <div><time>16:00</time><span>建設局協調</span></div>
-            </div>
-          </div>
-        </div>
+      <section class="filterRow">
+        <button>全部案件 <span>48</span></button>
+        <button>狀態</button>
+        <button>案件分類</button>
+        <button>負責助理</button>
+        <button>日期區間</button>
+        <button class="clearBtn">清除篩選</button>
+        <button class="newBtn">＋ 新增案件</button>
       </section>
 
-      <!-- Cases -->
-      <section id="cases" class="page">
-        <div class="pageHeader">
-          <div>
-            <span class="eyebrow">Case Center</span>
-            <h2>案件管理</h2>
-            <p>以最後更新時間排序，管理待受理、已受理、協調追蹤中、已完成案件。</p>
+      <section class="workspace">
+        <aside class="caseList">
+          <div class="listSearch">
+            <input placeholder="搜尋案件..." />
+            <button>篩</button>
           </div>
-          <button class="primaryBtn">＋新增案件</button>
-        </div>
 
-        <div class="splitLayout">
-          <div class="listPanel">
-            <div class="filterBar">
-              <input placeholder="搜尋案件、姓名、電話、地址..." />
-              <select>
-                <option>全部狀態</option>
-                <option>待受理</option>
-                <option>已受理</option>
-                <option>協調追蹤中</option>
-                <option>已完成</option>
-              </select>
+          <div class="caseCard active">
+            <div class="caseAvatar">王</div>
+            <div>
+              <h3>王先生</h3>
+              <p>崇德路二段 120 號</p>
+              <small>排水問題</small>
             </div>
-
-            <div class="recordList">
-              <div class="recordItem active">
-                <strong>CASE-240627001</strong>
-                <p>王先生｜排水溝破損</p>
-                <span class="badge orange">協調追蹤中</span>
-              </div>
-              <div class="recordItem">
-                <strong>CASE-240627002</strong>
-                <p>李小姐｜路燈不亮</p>
-                <span class="badge blue">已受理</span>
-              </div>
-              <div class="recordItem">
-                <strong>CASE-240627003</strong>
-                <p>陳先生｜道路坑洞</p>
-                <span class="badge gray">待受理</span>
-              </div>
+            <div class="caseMeta">
+              <span class="status orange">協調追蹤中</span>
+              <time>15:32</time>
+              <small>CASE240627001</small>
             </div>
           </div>
 
-          <div class="detailPanel">
-            <div class="detailHead">
+          <div class="caseCard">
+            <div class="caseAvatar">李</div>
+            <div>
+              <h3>李小姐</h3>
+              <p>進德路 45 巷</p>
+              <small>道路破損</small>
+            </div>
+            <div class="caseMeta">
+              <span class="status green">已轉權責單位</span>
+              <time>14:18</time>
+              <small>CASE240627002</small>
+            </div>
+          </div>
+
+          <div class="caseCard">
+            <div class="caseAvatar">陳</div>
+            <div>
+              <h3>陳先生</h3>
+              <p>自由路三段</p>
+              <small>路燈不亮</small>
+            </div>
+            <div class="caseMeta">
+              <span class="status blue">等待回覆</span>
+              <time>13:45</time>
+              <small>CASE240627003</small>
+            </div>
+          </div>
+
+          <div class="caseCard">
+            <div class="caseAvatar">張</div>
+            <div>
+              <h3>張太太</h3>
+              <p>東興路一段</p>
+              <small>噪音問題</small>
+            </div>
+            <div class="caseMeta">
+              <span class="status gray">初步受理</span>
+              <time>11:30</time>
+              <small>CASE240627004</small>
+            </div>
+          </div>
+
+          <div class="pager">
+            <button>‹</button>
+            <button class="active">1</button>
+            <button>2</button>
+            <button>3</button>
+            <button>›</button>
+          </div>
+        </aside>
+
+        <section class="caseDetail">
+          <button class="backBtn">← 返回列表</button>
+
+          <div class="caseTitle">
+            <div>
+              <h2>CASE240627001</h2>
+              <span class="status orange">協調追蹤中</span>
+            </div>
+            <p>建立時間：2024/06/27 09:22</p>
+          </div>
+
+          <div class="profileCard">
+            <div class="bigAvatar">王</div>
+            <div>
+              <h3>王先生 ☆</h3>
+              <p>☎ 0921-123-456</p>
+            </div>
+            <div>
+              <span>地址</span>
+              <b>台中市北屯區<br>崇德路二段 120 號</b>
+            </div>
+            <div>
+              <span>案件分類</span>
+              <b>排水問題</b>
+            </div>
+          </div>
+
+          <div class="tabs">
+            <button class="active">案件內容</button>
+            <button>相關資訊</button>
+            <button>處理紀錄</button>
+            <button>附件</button>
+            <button>照片</button>
+            <button>備註</button>
+          </div>
+
+          <div class="contentCard">
+            <h3>案件內容</h3>
+            <p>
+              崇德路二段 120 號前排水孔堵塞，遇大雨時積水嚴重，
+              導致機車無法通行，希望盡快協助處理。
+            </p>
+
+            <div class="photoRow">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div class="morePhoto">＋2</div>
+            </div>
+          </div>
+
+          <div class="infoGrid">
+            <div class="infoCard">
+              <h4>受理資訊</h4>
+              <p>受理方式：電話陳情</p>
+              <p>受理時間：2024/06/27 09:22</p>
+            </div>
+
+            <div class="infoCard">
+              <h4>權責單位</h4>
+              <p>建設局｜水利工程科</p>
+              <p>承辦人：林志明</p>
+            </div>
+          </div>
+
+          <div class="noteCard">
+            <h3>案件備註</h3>
+            <p>此路段每逢豪雨必淹，建議列入優先處理清單。</p>
+          </div>
+
+          <div class="tagCard">
+            <h3>標籤</h3>
+            <span>排水</span>
+            <span>崇德路</span>
+            <span>積水</span>
+            <span>優先處理</span>
+            <button>＋ 新增標籤</button>
+          </div>
+        </section>
+
+        <aside class="rightPanel">
+          <div class="rightTabs">
+            <button class="active">Timeline</button>
+            <button>留言</button>
+            <button>附件</button>
+            <button>提醒</button>
+          </div>
+
+          <div class="actionRow">
+            <button>編輯</button>
+            <button>轉派</button>
+            <button>更多</button>
+          </div>
+
+          <div class="timeline">
+            <div class="timelineItem green">
+              <i></i>
               <div>
-                <h3>CASE-240627001｜排水溝破損</h3>
-                <p>王先生｜0912-xxx-xxx｜東興路一段附近</p>
-              </div>
-              <span class="badge orange">協調追蹤中</span>
-            </div>
-
-            <div class="detailGrid">
-              <div><span>負責助理</span><b>阿明</b></div>
-              <div><span>案件類型</span><b>排水</b></div>
-              <div><span>優先度</span><b>急件</b></div>
-              <div><span>最後更新</span><b>今日 15:21</b></div>
-            </div>
-
-            <div class="sectionCard">
-              <h4>案件內容</h4>
-              <p>民眾反映住家附近排水溝蓋破損，車輛經過會發出聲響，擔心影響行人安全。</p>
-            </div>
-
-            <div class="sectionGrid">
-              <div class="sectionCard">
-                <h4>處理流程</h4>
-                <div class="miniTimeline">
-                  <div><b>建立案件</b><span>今日 09:20</span></div>
-                  <div><b>聯繫民眾</b><span>今日 10:10</span></div>
-                  <div><b>轉交機關</b><span>今日 13:30</span></div>
-                </div>
-              </div>
-
-              <div class="sectionCard">
-                <h4>留言紀錄</h4>
-                <div class="commentList">
-                  <div><b>主任</b><p>請下午確認是否需現場會勘。</p></div>
-                  <div><b>阿明</b><p>已聯繫建設局窗口。</p></div>
-                </div>
+                <h4>案件建立</h4>
+                <p>案件由民眾來電反映</p>
+                <span>09:22</span>
               </div>
             </div>
 
-            <div class="sectionGrid">
-              <div class="sectionCard">
-                <h4>照片附件</h4>
-                <div class="photoGrid">
-                  <div></div><div></div><div></div><div></div>
-                </div>
-              </div>
-
-              <div class="sectionCard">
-                <h4>拜訪紀錄</h4>
-                <p>今日 14:30 已由外勤到現場查看，等待機關回覆。</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Archive -->
-      <section id="archive" class="page">
-        <div class="pageHeader">
-          <div>
-            <span class="eyebrow">Archive</span>
-            <h2>服務資料歸檔</h2>
-            <p>所有服務過的人、案件、互動與紀錄集中歸檔。</p>
-          </div>
-          <button class="primaryBtn">＋新增資料</button>
-        </div>
-
-        <div class="splitLayout">
-          <div class="listPanel">
-            <div class="filterBar">
-              <input placeholder="搜尋姓名、電話、地址、標籤..." />
-              <select><option>全部類型</option></select>
-            </div>
-
-            <div class="recordList">
-              <div class="recordItem active"><strong>王先生</strong><p>和平里｜服務案件 12 件</p></div>
-              <div class="recordItem"><strong>黃主委</strong><p>社區主委｜地方互動 8 次</p></div>
-              <div class="recordItem"><strong>林里長</strong><p>里長｜最近互動 3 天前</p></div>
-            </div>
-          </div>
-
-          <div class="detailPanel">
-            <div class="detailHead">
+            <div class="timelineItem blue">
+              <i></i>
               <div>
-                <h3>王先生</h3>
-                <p>和平里｜0912-xxx-xxx｜東興路</p>
-              </div>
-              <span class="badge green">長期服務</span>
-            </div>
-
-            <div class="detailGrid">
-              <div><span>歷史案件</span><b>12</b></div>
-              <div><span>互動紀錄</span><b>8</b></div>
-              <div><span>最近服務</span><b>今日</b></div>
-              <div><span>標籤</span><b>排水 / 道路</b></div>
-            </div>
-
-            <div class="sectionCard">
-              <h4>服務歷程</h4>
-              <div class="miniTimeline">
-                <div><b>排水溝破損</b><span>今日</span></div>
-                <div><b>道路坑洞</b><span>2026/06/12</span></div>
-                <div><b>路燈不亮</b><span>2026/05/28</span></div>
+                <h4>聯絡民眾</h4>
+                <p>已了解狀況，將轉相關單位處理</p>
+                <span>10:35</span>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
 
-      <!-- Interactions -->
-      <section id="interactions" class="page">
-        <div class="pageHeader">
-          <div>
-            <span class="eyebrow">Local Interaction</span>
-            <h2>地方互動</h2>
-            <p>以日期為主的外勤與地方情報流水帳，支援 Calendar 快速跳回日期。</p>
-          </div>
-          <button class="primaryBtn">＋新增互動</button>
-        </div>
-
-        <div class="threeLayout">
-          <div class="calendarMini">
-            <h3>六月 2026</h3>
-            <div class="calendarGrid">
-              <span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span>
-              <button>22</button><button>23</button><button>24</button><button>25</button><button>26</button><button class="active">27</button><button>28</button>
-              <button>29</button><button>30</button><button>1</button><button>2</button><button>3</button><button>4</button><button>5</button>
-            </div>
-          </div>
-
-          <div class="listPanel">
-            <div class="recordList">
-              <div class="recordItem active"><strong>15:30｜黃主委</strong><p>聊天｜活動中心整修與停車問題</p></div>
-              <div class="recordItem"><strong>14:10｜林里長</strong><p>地方反映｜排水與路燈</p></div>
-              <div class="recordItem"><strong>11:30｜陳老闆</strong><p>店家拜訪｜地方消息回報</p></div>
-            </div>
-          </div>
-
-          <div class="detailPanel">
-            <div class="detailHead">
+            <div class="timelineItem blue">
+              <i></i>
               <div>
-                <h3>黃主委｜地方互動紀錄</h3>
-                <p>和平里活動中心｜2026/06/27 15:30</p>
-              </div>
-              <span class="badge blue">需追蹤</span>
-            </div>
-
-            <div class="sectionCard">
-              <h4>互動內容</h4>
-              <p>與黃主委聊活動中心整修進度，另提到附近停車問題近期反映增加。</p>
-            </div>
-
-            <div class="sectionCard">
-              <h4>地方情報</h4>
-              <div class="tagList">
-                <span>#停車</span><span>#活動中心</span><span>#主委</span>
+                <h4>轉交水利局</h4>
+                <p>已轉交水利局進行處理</p>
+                <span>13:00</span>
               </div>
             </div>
 
-            <div class="sectionCard">
-              <h4>後續動作</h4>
-              <p>下週再次確認停車問題是否需要轉成正式案件。</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Funerals -->
-      <section id="funerals" class="page">
-        <div class="pageHeader">
-          <div>
-            <span class="eyebrow">Funeral Service</span>
-            <h2>喪宅系統</h2>
-            <p>依出殯日期與未完成事項排序，管理輓聯、送水、公祭行程與喪宅位置。</p>
-          </div>
-          <button class="primaryBtn">＋新增喪宅</button>
-        </div>
-
-        <div class="splitLayout mapLayout">
-          <div class="listPanel">
-            <div class="filterBar">
-              <input placeholder="搜尋喪家、聯絡人、殯儀館..." />
-              <select><option>本週</option><option>今日</option><option>未完成事項</option></select>
-            </div>
-
-            <div class="recordList">
-              <div class="recordItem active">
-                <strong>6/28 09:00｜陳媽媽</strong>
-                <p>台中市生命禮儀館｜剩 3 項</p>
-                <span class="progressText">服務進度 6/9</span>
-              </div>
-              <div class="recordItem">
-                <strong>6/28 10:30｜王先生</strong>
-                <p>東海殯儀館｜剩 1 項</p>
-                <span class="progressText">服務進度 8/9</span>
-              </div>
-              <div class="recordItem">
-                <strong>6/29 08:30｜林阿公</strong>
-                <p>崇德廳｜剩 4 項</p>
-                <span class="progressText">服務進度 5/9</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="mapPanel">
-            <div class="fakeMap">
-              <div class="mapPin pin1">6/9</div>
-              <div class="mapPin pin2">8/9</div>
-              <div class="mapPin pin3">5/9</div>
-              <span>Google Map 喪宅位置輔助</span>
-            </div>
-          </div>
-
-          <div class="detailPanel">
-            <div class="detailHead">
+            <div class="timelineItem orange">
+              <i></i>
               <div>
-                <h3>陳媽媽｜喪宅服務</h3>
-                <p>出殯 2026/06/28 09:00｜台中市生命禮儀館</p>
-              </div>
-              <span class="badge orange">剩 3 項</span>
-            </div>
-
-            <div class="checkList">
-              <label><input type="checkbox" checked /> 已收到訃聞</label>
-              <label><input type="checkbox" checked /> 已建立資料</label>
-              <label><input type="checkbox" checked /> 已加入公祭行程</label>
-              <label><input type="checkbox" checked /> 已送輓聯</label>
-              <label><input type="checkbox" checked /> 已送礦泉水</label>
-              <label><input type="checkbox" /> 已送水果</label>
-              <label><input type="checkbox" /> 已安排出席</label>
-              <label><input type="checkbox" /> 已完成致意</label>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Contacts -->
-      <section id="contacts" class="page">
-        <div class="pageHeader">
-          <div>
-            <span class="eyebrow">Local Contacts</span>
-            <h2>地方聯絡人管理</h2>
-            <p>管理里長、主委、校長、宮廟、店家、社團與重要地方人士。</p>
-          </div>
-          <button class="primaryBtn">＋新增聯絡人</button>
-        </div>
-
-        <div class="splitLayout">
-          <div class="listPanel">
-            <div class="filterBar">
-              <input placeholder="搜尋姓名、身份、地區..." />
-              <select><option>全部身份</option></select>
-            </div>
-
-            <div class="recordList">
-              <div class="recordItem active"><strong>黃主委</strong><p>和平里社區主委｜最近互動 今日</p></div>
-              <div class="recordItem"><strong>林里長</strong><p>和平里里長｜最近互動 3 天前</p></div>
-              <div class="recordItem"><strong>陳校長</strong><p>國小校長｜最近互動 12 天前</p></div>
-            </div>
-          </div>
-
-          <div class="detailPanel">
-            <div class="detailHead">
-              <div>
-                <h3>黃主委</h3>
-                <p>和平里社區主委｜0912-xxx-xxx</p>
-              </div>
-              <span class="badge green">高互動</span>
-            </div>
-
-            <div class="detailGrid">
-              <div><span>身份</span><b>主委</b></div>
-              <div><span>地區</span><b>和平里</b></div>
-              <div><span>互動次數</span><b>8</b></div>
-              <div><span>下次追蹤</span><b>7/05</b></div>
-            </div>
-
-            <div class="sectionCard">
-              <h4>最近互動</h4>
-              <div class="miniTimeline">
-                <div><b>活動中心整修</b><span>今日</span></div>
-                <div><b>停車問題討論</b><span>上週</span></div>
+                <h4>協調追蹤中</h4>
+                <p>水利局預計 2 個工作天內回覆</p>
+                <span>15:32</span>
               </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      <!-- Calendar -->
-      <section id="calendar" class="page">
-        <div class="pageHeader">
-          <div>
-            <span class="eyebrow">Calendar</span>
-            <h2>行程管理</h2>
-            <p>唯一行程中心，案件會勘、地方拜訪、公祭、婚宴、探病與會議都同步到這裡。</p>
-          </div>
-          <button class="primaryBtn">＋新增行程</button>
-        </div>
+          <button class="fullBtn">查看完整 Timeline</button>
 
-        <div class="calendarLayout">
-          <div class="panel">
-            <h3>六月 2026</h3>
-            <div class="bigCalendar">
-              <div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div><div>日</div>
-              <button>22</button><button>23</button><button>24</button><button>25</button><button>26</button><button class="active">27</button><button>28</button>
-              <button>29</button><button>30</button><button>1</button><button>2</button><button>3</button><button>4</button><button>5</button>
+          <div class="quickPanel">
+            <h3>快速操作</h3>
+            <div>
+              <button>撥打電話</button>
+              <button>發送訊息</button>
+              <button>開啟地圖</button>
+              <button>新增提醒</button>
             </div>
           </div>
 
-          <div class="panel">
-            <h3>6/27 今日行程</h3>
-            <div class="timelineList">
-              <div><time>09:00</time><span>服務處晨會</span></div>
-              <div><time>10:30</time><span>東興路會勘</span></div>
-              <div><time>14:00</time><span>和平里主委拜訪</span></div>
-              <div><time>16:00</time><span>建設局協調</span></div>
+          <div class="assistantBox">
+            <button>×</button>
+            <h3>✦ ASTREA Assistant</h3>
+            <p>今天有 3 件案件已逾期尚未處理，要我幫你整理追蹤清單嗎？</p>
+            <div>
+              <button>查看追蹤</button>
+              <button>稍後再說</button>
             </div>
           </div>
-        </div>
-      </section>
-
-      <!-- Team -->
-      <section id="team" class="page">
-        <div class="pageHeader">
-          <div>
-            <span class="eyebrow">Team Control</span>
-            <h2>團隊管理</h2>
-            <p>查看每位助理工作分配、案件狀態、今日行程、喪宅與工作負載。</p>
-          </div>
-          <button class="primaryBtn">＋分派工作</button>
-        </div>
-
-        <div class="statsGrid">
-          <div class="statCard"><span>今日總工作</span><b>58</b><small>全團隊</small></div>
-          <div class="statCard"><span>處理中案件</span><b>41</b><small>需追蹤</small></div>
-          <div class="statCard"><span>今日外勤</span><b>17</b><small>拜訪與會勘</small></div>
-          <div class="statCard warn"><span>高負載助理</span><b>2</b><small>建議調整</small></div>
-        </div>
-
-        <div class="splitLayout">
-          <div class="listPanel">
-            <div class="recordList">
-              <div class="recordItem active"><strong>王小明</strong><p>案件 18｜外勤 4｜喪宅 2</p><span class="badge orange">工作量 26</span></div>
-              <div class="recordItem"><strong>陳小華</strong><p>案件 25｜外勤 1｜喪宅 0</p><span class="badge red">工作量 31</span></div>
-              <div class="recordItem"><strong>林佳蓉</strong><p>案件 9｜外勤 6｜喪宅 1</p><span class="badge green">工作量 18</span></div>
-            </div>
-          </div>
-
-          <div class="detailPanel">
-            <div class="detailHead">
-              <div>
-                <h3>王小明｜今日工作</h3>
-                <p>案件、拜訪、喪宅與行程分配狀態。</p>
-              </div>
-              <span class="badge orange">工作量偏高</span>
-            </div>
-
-            <div class="sectionCard">
-              <h4>今日工作清單</h4>
-              <div class="miniTimeline">
-                <div><b>CASE-240627001</b><span>協調追蹤中</span></div>
-                <div><b>和平里主委拜訪</b><span>14:00</span></div>
-                <div><b>陳媽媽喪宅</b><span>待送水果</span></div>
-                <div><b>東興路會勘</b><span>10:30</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Settings -->
-      <section id="settings" class="page">
-        <div class="pageHeader">
-          <div>
-            <span class="eyebrow">Settings</span>
-            <h2>系統設定</h2>
-            <p>管理帳號權限、分類、提醒、Google、LINE、備份與資料匯入匯出。</p>
-          </div>
-        </div>
-
-        <div class="settingsGrid">
-          <div class="sectionCard"><h4>帳號與權限</h4><p>主任、助理、外勤、檢視者權限設定。</p></div>
-          <div class="sectionCard"><h4>案件分類</h4><p>道路、排水、路燈、環境、社福等分類。</p></div>
-          <div class="sectionCard"><h4>地方身份</h4><p>里長、主委、校長、宮廟、店家等身份標籤。</p></div>
-          <div class="sectionCard"><h4>提醒設定</h4><p>案件逾期、公祭提醒、生日提醒、行程提醒。</p></div>
-          <div class="sectionCard"><h4>Google 串接</h4><p>Google Calendar、Google Map、Google Drive。</p></div>
-          <div class="sectionCard"><h4>資料備份</h4><p>Excel 匯入匯出、Google Sheet 備份、系統紀錄。</p></div>
-        </div>
+        </aside>
       </section>
     </main>
   </div>
