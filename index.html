@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ASTREA Office OS｜案件管理</title>
+  <title>ASTREA Office OS｜案件管理 V3</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -11,303 +11,260 @@
   <div class="app">
     <aside class="sidebar">
       <div class="brand">
-        <div class="brandIcon">✦</div>
+        <div class="brandIcon">江</div>
         <div>
-          <h1>ASTREA</h1>
-          <p>Office OS</p>
-          <span>Political Edition</span>
+          <h1>江肇國服務處</h1>
+          <p>ASTREA Office OS</p>
         </div>
       </div>
 
       <nav class="nav">
         <button>工作首頁</button>
         <button class="active">案件管理</button>
-        <button>服務資料歸檔</button>
+        <button>服務歷史中心</button>
         <button>地方互動</button>
-        <button>喪宅系統</button>
+        <button>追思服務</button>
         <button>地方聯絡人</button>
         <button>行程管理</button>
         <button>團隊管理</button>
         <button>系統設定</button>
       </nav>
 
-      <div class="todayCard">
-        <h3>今日工作</h3>
-        <div><span>案件</span><b>12</b></div>
-        <div><span>拜訪</span><b>5</b></div>
-        <div><span>喪宅</span><b>2</b></div>
-        <div><span>會勘</span><b>1</b></div>
-        <button>查看行程表</button>
-      </div>
-
-      <div class="userCard">
-        <div class="avatar">張</div>
-        <div>
-          <strong>張軒睿</strong>
-          <p>主任</p>
-          <span>● Online</span>
-        </div>
+      <div class="sideSummary">
+        <span>今日待處理</span>
+        <b>12</b>
+        <p>3 件超過 3 天未更新</p>
       </div>
     </aside>
 
     <main class="main">
       <header class="topbar">
         <div>
-          <h2>早安，張軒睿 👋</h2>
-          <p>今天有 <b>48</b> 件案件需要追蹤，<b>12</b> 件今日工作</p>
+          <h2>案件管理</h2>
+          <p>未完成案件工作區，完成後自動進入服務歷史中心。</p>
         </div>
 
-        <div class="topSearch">
-          <input placeholder="搜尋案件編號、姓名、電話、地址、關鍵字..." />
-          <kbd>⌘K</kbd>
-        </div>
-
-        <div class="topActions">
-          <button>🔔</button>
-          <button>📅</button>
-          <div class="miniUser">張軒睿</div>
-        </div>
+        <button class="primaryBtn" id="openCreateBtn">＋ 建立案件</button>
       </header>
 
-      <section class="filterRow">
-        <button>全部案件 <span>48</span></button>
-        <button>狀態</button>
-        <button>案件分類</button>
-        <button>負責助理</button>
-        <button>日期區間</button>
-        <button class="clearBtn">清除篩選</button>
-        <button class="newBtn">＋ 新增案件</button>
+      <section class="caseHero">
+        <div>
+          <span>Work Queue</span>
+          <h1>今天有 48 件案件需要追蹤</h1>
+          <p>依「未完成優先」與「最後更新時間」排序，讓助理直接處理下一件工作。</p>
+        </div>
+
+        <div class="heroStats">
+          <div><b>8</b><span>待受理</span></div>
+          <div><b>16</b><span>機關協調中</span></div>
+          <div><b>5</b><span>待民眾回覆</span></div>
+        </div>
       </section>
 
-      <section class="workspace">
-        <aside class="caseList">
-          <div class="listSearch">
-            <input placeholder="搜尋案件..." />
-            <button>篩</button>
-          </div>
+      <section class="toolbar">
+        <div class="searchBox">
+          <span>⌕</span>
+          <input id="caseSearch" placeholder="搜尋姓名、電話、地址、案件編號、關鍵字..." />
+        </div>
 
-          <div class="caseCard active">
-            <div class="caseAvatar">王</div>
-            <div>
-              <h3>王先生</h3>
-              <p>崇德路二段 120 號</p>
-              <small>排水問題</small>
+        <select id="statusFilter">
+          <option value="">全部狀態</option>
+          <option value="待受理">待受理</option>
+          <option value="已聯繫">已聯繫</option>
+          <option value="機關協調中">機關協調中</option>
+          <option value="待民眾回覆">待民眾回覆</option>
+          <option value="待複查">待複查</option>
+        </select>
+
+        <select id="ownerFilter">
+          <option value="">全部助理</option>
+          <option value="阿明">阿明</option>
+          <option value="小陳">小陳</option>
+          <option value="主任">主任</option>
+        </select>
+
+        <button class="ghostBtn">清除篩選</button>
+      </section>
+
+      <section class="queueTabs">
+        <button class="active">目前處理中 <b>48</b></button>
+        <button>今日新增 <b>12</b></button>
+        <button>超過 3 天未更新 <b>3</b></button>
+        <button>已完成歸檔 <b>612</b></button>
+      </section>
+
+      <section class="caseList" id="caseList">
+        <article class="caseRow active" data-id="CASE-2026-000128">
+          <div class="personBadge">王</div>
+
+          <div class="caseMain">
+            <div class="caseLine">
+              <h3>王先生｜排水溝破損</h3>
+              <span class="status orange">機關協調中</span>
             </div>
+
+            <p>東興路一段附近，排水溝蓋破損，車輛經過有安全疑慮。</p>
+
             <div class="caseMeta">
-              <span class="status orange">協調追蹤中</span>
-              <time>15:32</time>
-              <small>CASE240627001</small>
+              <span>CASE-2026-000128</span>
+              <span>和平里</span>
+              <span>建設局</span>
+              <span>負責：阿明</span>
             </div>
           </div>
 
-          <div class="caseCard">
-            <div class="caseAvatar">李</div>
-            <div>
-              <h3>李小姐</h3>
-              <p>進德路 45 巷</p>
-              <small>道路破損</small>
+          <div class="caseTime">
+            <b>15:32</b>
+            <span>今日更新</span>
+          </div>
+        </article>
+
+        <article class="caseRow" data-id="CASE-2026-000129">
+          <div class="personBadge">李</div>
+
+          <div class="caseMain">
+            <div class="caseLine">
+              <h3>李小姐｜路燈不亮</h3>
+              <span class="status blue">已聯繫</span>
             </div>
+
+            <p>和平里巷口路燈不亮，夜間行走不安全。</p>
+
             <div class="caseMeta">
-              <span class="status green">已轉權責單位</span>
-              <time>14:18</time>
-              <small>CASE240627002</small>
+              <span>CASE-2026-000129</span>
+              <span>和平里</span>
+              <span>建設局</span>
+              <span>負責：小陳</span>
             </div>
           </div>
 
-          <div class="caseCard">
-            <div class="caseAvatar">陳</div>
-            <div>
-              <h3>陳先生</h3>
-              <p>自由路三段</p>
-              <small>路燈不亮</small>
+          <div class="caseTime">
+            <b>14:18</b>
+            <span>今日更新</span>
+          </div>
+        </article>
+
+        <article class="caseRow" data-id="CASE-2026-000130">
+          <div class="personBadge">陳</div>
+
+          <div class="caseMain">
+            <div class="caseLine">
+              <h3>陳先生｜道路坑洞</h3>
+              <span class="status gray">待受理</span>
             </div>
+
+            <p>五權路附近道路坑洞，民眾希望協助通報修補。</p>
+
             <div class="caseMeta">
-              <span class="status blue">等待回覆</span>
-              <time>13:45</time>
-              <small>CASE240627003</small>
+              <span>CASE-2026-000130</span>
+              <span>東南區</span>
+              <span>建設局</span>
+              <span>負責：主任</span>
             </div>
           </div>
 
-          <div class="caseCard">
-            <div class="caseAvatar">張</div>
-            <div>
-              <h3>張太太</h3>
-              <p>東興路一段</p>
-              <small>噪音問題</small>
-            </div>
-            <div class="caseMeta">
-              <span class="status gray">初步受理</span>
-              <time>11:30</time>
-              <small>CASE240627004</small>
-            </div>
+          <div class="caseTime">
+            <b>13:45</b>
+            <span>今日新增</span>
           </div>
-
-          <div class="pager">
-            <button>‹</button>
-            <button class="active">1</button>
-            <button>2</button>
-            <button>3</button>
-            <button>›</button>
-          </div>
-        </aside>
-
-        <section class="caseDetail">
-          <button class="backBtn">← 返回列表</button>
-
-          <div class="caseTitle">
-            <div>
-              <h2>CASE240627001</h2>
-              <span class="status orange">協調追蹤中</span>
-            </div>
-            <p>建立時間：2024/06/27 09:22</p>
-          </div>
-
-          <div class="profileCard">
-            <div class="bigAvatar">王</div>
-            <div>
-              <h3>王先生 ☆</h3>
-              <p>☎ 0921-123-456</p>
-            </div>
-            <div>
-              <span>地址</span>
-              <b>台中市北屯區<br>崇德路二段 120 號</b>
-            </div>
-            <div>
-              <span>案件分類</span>
-              <b>排水問題</b>
-            </div>
-          </div>
-
-          <div class="tabs">
-            <button class="active">案件內容</button>
-            <button>相關資訊</button>
-            <button>處理紀錄</button>
-            <button>附件</button>
-            <button>照片</button>
-            <button>備註</button>
-          </div>
-
-          <div class="contentCard">
-            <h3>案件內容</h3>
-            <p>
-              崇德路二段 120 號前排水孔堵塞，遇大雨時積水嚴重，
-              導致機車無法通行，希望盡快協助處理。
-            </p>
-
-            <div class="photoRow">
-              <div></div>
-              <div></div>
-              <div></div>
-              <div class="morePhoto">＋2</div>
-            </div>
-          </div>
-
-          <div class="infoGrid">
-            <div class="infoCard">
-              <h4>受理資訊</h4>
-              <p>受理方式：電話陳情</p>
-              <p>受理時間：2024/06/27 09:22</p>
-            </div>
-
-            <div class="infoCard">
-              <h4>權責單位</h4>
-              <p>建設局｜水利工程科</p>
-              <p>承辦人：林志明</p>
-            </div>
-          </div>
-
-          <div class="noteCard">
-            <h3>案件備註</h3>
-            <p>此路段每逢豪雨必淹，建議列入優先處理清單。</p>
-          </div>
-
-          <div class="tagCard">
-            <h3>標籤</h3>
-            <span>排水</span>
-            <span>崇德路</span>
-            <span>積水</span>
-            <span>優先處理</span>
-            <button>＋ 新增標籤</button>
-          </div>
-        </section>
-
-        <aside class="rightPanel">
-          <div class="rightTabs">
-            <button class="active">Timeline</button>
-            <button>留言</button>
-            <button>附件</button>
-            <button>提醒</button>
-          </div>
-
-          <div class="actionRow">
-            <button>編輯</button>
-            <button>轉派</button>
-            <button>更多</button>
-          </div>
-
-          <div class="timeline">
-            <div class="timelineItem green">
-              <i></i>
-              <div>
-                <h4>案件建立</h4>
-                <p>案件由民眾來電反映</p>
-                <span>09:22</span>
-              </div>
-            </div>
-
-            <div class="timelineItem blue">
-              <i></i>
-              <div>
-                <h4>聯絡民眾</h4>
-                <p>已了解狀況，將轉相關單位處理</p>
-                <span>10:35</span>
-              </div>
-            </div>
-
-            <div class="timelineItem blue">
-              <i></i>
-              <div>
-                <h4>轉交水利局</h4>
-                <p>已轉交水利局進行處理</p>
-                <span>13:00</span>
-              </div>
-            </div>
-
-            <div class="timelineItem orange">
-              <i></i>
-              <div>
-                <h4>協調追蹤中</h4>
-                <p>水利局預計 2 個工作天內回覆</p>
-                <span>15:32</span>
-              </div>
-            </div>
-          </div>
-
-          <button class="fullBtn">查看完整 Timeline</button>
-
-          <div class="quickPanel">
-            <h3>快速操作</h3>
-            <div>
-              <button>撥打電話</button>
-              <button>發送訊息</button>
-              <button>開啟地圖</button>
-              <button>新增提醒</button>
-            </div>
-          </div>
-
-          <div class="assistantBox">
-            <button>×</button>
-            <h3>✦ ASTREA Assistant</h3>
-            <p>今天有 3 件案件已逾期尚未處理，要我幫你整理追蹤清單嗎？</p>
-            <div>
-              <button>查看追蹤</button>
-              <button>稍後再說</button>
-            </div>
-          </div>
-        </aside>
+        </article>
       </section>
     </main>
   </div>
+
+  <aside class="drawer active" id="caseDrawer">
+    <div class="drawerHead">
+      <div>
+        <span class="drawerLabel">CASE-2026-000128</span>
+        <h2>王先生｜排水溝破損</h2>
+        <p>和平里｜東興路一段附近｜負責助理：阿明</p>
+      </div>
+
+      <button id="closeDrawerBtn">×</button>
+    </div>
+
+    <div class="drawerStatus">
+      <span class="status orange">機關協調中</span>
+      <button>轉派</button>
+      <button>新增紀錄</button>
+      <button class="completeBtn">完成並歸檔</button>
+    </div>
+
+    <div class="drawerGrid">
+      <div>
+        <span>民眾電話</span>
+        <b>0912-xxx-xxx</b>
+      </div>
+
+      <div>
+        <span>案件分類</span>
+        <b>排水</b>
+      </div>
+
+      <div>
+        <span>權責單位</span>
+        <b>建設局</b>
+      </div>
+
+      <div>
+        <span>最後更新</span>
+        <b>今日 15:32</b>
+      </div>
+    </div>
+
+    <div class="drawerTabs">
+      <button class="active">案件內容</button>
+      <button>Timeline</button>
+      <button>留言</button>
+      <button>照片</button>
+      <button>附件</button>
+    </div>
+
+    <section class="drawerSection">
+      <h3>案件內容</h3>
+      <p>
+        民眾反映東興路一段附近排水溝蓋破損，車輛經過會發出聲響，
+        擔心影響行人安全，希望協助通報處理。
+      </p>
+    </section>
+
+    <section class="drawerSection">
+      <h3>處理流程</h3>
+
+      <div class="timeline">
+        <div>
+          <b>建立案件</b>
+          <span>今日 09:22｜電話陳情</span>
+        </div>
+
+        <div>
+          <b>已聯繫民眾</b>
+          <span>今日 10:35｜確認位置與狀況</span>
+        </div>
+
+        <div>
+          <b>已轉交建設局</b>
+          <span>今日 13:00｜等待承辦回覆</span>
+        </div>
+
+        <div>
+          <b>機關協調中</b>
+          <span>今日 15:32｜預計 2 個工作天內回覆</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="drawerSection">
+      <h3>自動派工紀錄</h3>
+      <div class="assignBox">
+        <p>系統判斷：和平里 → 阿明</p>
+        <p>案件分類：排水 → 建設局</p>
+        <p>狀態：已自動指派</p>
+      </div>
+    </section>
+  </aside>
+
+  <div class="drawerMask active" id="drawerMask"></div>
 
   <script src="app.js"></script>
 </body>
