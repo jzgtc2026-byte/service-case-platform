@@ -1,608 +1,195 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbwghaXnJlNbljeHIlaND-D6VJ9a52WODhd1cCs4NFuMBoEpX_NYu0SDbmlQTFyPOsvD/exec";
-const ORG_ID = "ORG-JZG";
-
 const $ = (id) => document.getElementById(id);
 
-let state = {
-  cases: [],
-  citizens: [],
-  categories: [],
-  departments: [],
-  visits: [],
-  schedule: [],
-  dashboard: {}
+const pageMeta = {
+  dashboard: {
+    title: "首頁總覽",
+    subtitle: "服務案件、地方互動、喪宅流程與團隊工作集中管理。"
+  },
+  cases: {
+    title: "案件管理",
+    subtitle: "以案件為中心，追蹤民眾陳情、處理流程、留言、照片與附件。"
+  },
+  archive: {
+    title: "服務資料歸檔",
+    subtitle: "所有服務對象、案件、互動與歷史紀錄集中歸檔。"
+  },
+  interactions: {
+    title: "地方互動",
+    subtitle: "以日期為主，紀錄外勤拜訪、地方情報、聊天內容與後續追蹤。"
+  },
+  funerals: {
+    title: "喪宅系統",
+    subtitle: "依出殯日期與未完成事項排序，追蹤輓聯、送水、公祭行程與位置。"
+  },
+  contacts: {
+    title: "地方聯絡人",
+    subtitle: "管理里長、主委、校長、宮廟、店家、社團與重要地方人士。"
+  },
+  calendar: {
+    title: "行程管理",
+    subtitle: "唯一行程中心，整合會勘、拜訪、公祭、婚宴、探病與會議。"
+  },
+  team: {
+    title: "團隊管理",
+    subtitle: "主管控制台，查看每位助理工作量、案件狀態與分派情形。"
+  },
+  settings: {
+    title: "系統設定",
+    subtitle: "管理帳號權限、分類、提醒、Google、LINE、備份與資料匯入匯出。"
+  }
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll(".nav").forEach((btn) => {
-    btn.addEventListener("click", () => showPage(btn.dataset.page));
-  });
-
-  $("menuBtn")?.addEventListener("click", () => {
-    $("sidebar")?.classList.toggle("open");
-  });
-
-  ensureToastBox();
-  loadInit();
+  bindNavigation();
+  bindRecordSelection();
+  bindCalendarSelection();
+  bindQuickButtons();
 });
 
-function showPage(id) {
-  document.querySelectorAll(".nav").forEach((n) => {
-    n.classList.toggle("active", n.dataset.page === id);
+function bindNavigation() {
+  document.querySelectorAll(".nav").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      showPage(btn.dataset.page);
+    });
+  });
+}
+
+function showPage(pageId) {
+  document.querySelectorAll(".nav").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.page === pageId);
   });
 
-  document.querySelectorAll(".page").forEach((p) => {
-    p.classList.toggle("active", p.id === id);
+  document.querySelectorAll(".page").forEach((page) => {
+    page.classList.toggle("active", page.id === pageId);
   });
 
-  const nav = document.querySelector(`.nav[data-page="${id}"]`);
+  const meta = pageMeta[pageId];
 
-  if ($("pageTitle") && nav) {
-    $("pageTitle").textContent = nav.textContent
-      .replace(/[^\u4e00-\u9fa5A-Za-z]/g, "")
-      .trim();
+  if (meta) {
+    if ($("pageTitle")) $("pageTitle").textContent = meta.title;
+    if ($("pageSubtitle")) $("pageSubtitle").textContent = meta.subtitle;
   }
 
-  $("sidebar")?.classList.remove("open");
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
 }
 
-async function apiGet(action) {
-  if (!API_URL) throw new Error("尚未設定 API_URL");
+function bindRecordSelection() {
+  document.querySelectorAll(".recordList").forEach((list) => {
+    list.addEventListener("click", (event) => {
+      const item = event.target.closest(".recordItem");
 
-  const url = `${API_URL}?action=${encodeURIComponent(action)}&organizationId=${encodeURIComponent(ORG_ID)}`;
-  const res = await fetch(url);
+      if (!item) return;
 
-  if (!res.ok) throw new Error(`API 讀取失敗：${res.status}`);
+      list.querySelectorAll(".recordItem").forEach((row) => {
+        row.classList.remove("active");
+      });
 
-  return await res.json();
+      item.classList.add("active");
+
+      toast("已選取", item.querySelector("strong")?.textContent || "資料");
+    });
+  });
 }
 
-async function apiPost(action, payload = {}) {
-  if (!API_URL) throw new Error("尚未設定 API_URL");
+function bindCalendarSelection() {
+  document.querySelectorAll(".calendarGrid button, .bigCalendar button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const parent = btn.closest(".calendarGrid, .bigCalendar");
 
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "text/plain;charset=utf-8"
-    },
-    body: JSON.stringify({
-      action,
-      payload: {
-        organizationId: ORG_ID,
-        ...payload
+      if (!parent) return;
+
+      parent.querySelectorAll("button").forEach((b) => {
+        b.classList.remove("active");
+      });
+
+      btn.classList.add("active");
+
+      toast("日期切換", `已切換到 ${btn.textContent} 日`);
+    });
+  });
+}
+
+function bindQuickButtons() {
+  document.querySelectorAll(".primaryBtn, .quickGrid button, .ghostBtn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const text = btn.textContent.trim();
+
+      if (!text) return;
+
+      if (text.includes("全部案件")) {
+        showPage("cases");
+        return;
       }
-    })
-  });
 
-  if (!res.ok) throw new Error(`API 寫入失敗：${res.status}`);
-
-  return await res.json();
-}
-
-async function loadInit() {
-  try {
-    setStatus("讀取資料...", "");
-
-    const data = await apiGet("init");
-
-    if (!data.ok) {
-      throw new Error(data.message || "讀取失敗");
-    }
-
-    state = {
-      ...state,
-      ...data,
-      visits: data.visits || state.visits || [],
-      schedule: data.schedule || data.schedules || state.schedule || []
-    };
-
-    setStatus("已同步", "ok");
-  } catch (err) {
-    console.error(err);
-    setStatus("離線展示", "err");
-    seedDemo();
-    toast("離線展示模式", "目前使用示範資料，請確認 Apps Script 部署與權限。", "error");
-  }
-
-  renderAll();
-}
-
-function seedDemo() {
-  state.dashboard = {
-    totalCases: 3,
-    todayCases: 1,
-    processingCases: 2,
-    aiFiledCases: 1
-  };
-
-  state.categories = [
-    { categoryName: "道路" },
-    { categoryName: "排水" },
-    { categoryName: "路燈" },
-    { categoryName: "交通" },
-    { categoryName: "環境" },
-    { categoryName: "社福" }
-  ];
-
-  state.cases = [
-    {
-      caseNo: "CASE-001",
-      citizenName: "王先生",
-      categoryName: "排水",
-      title: "水溝蓋破損",
-      address: "東興路一段附近",
-      priority: "急件",
-      status: "處理中"
-    },
-    {
-      caseNo: "CASE-002",
-      citizenName: "李小姐",
-      categoryName: "路燈",
-      title: "路燈不亮",
-      address: "和平里",
-      priority: "一般",
-      status: "待受理"
-    },
-    {
-      caseNo: "CASE-003",
-      citizenName: "陳先生",
-      categoryName: "交通",
-      title: "違停嚴重",
-      address: "五權路",
-      priority: "一般",
-      status: "已完成"
-    }
-  ];
-
-  state.citizens = [
-    {
-      name: "王先生",
-      phone: "0912xxx",
-      address: "東興路",
-      village: "和平里",
-      caseCount: 1
-    },
-    {
-      name: "李小姐",
-      phone: "0922xxx",
-      address: "和平里",
-      village: "和平里",
-      caseCount: 1
-    }
-  ];
-
-  state.visits = [];
-  state.schedule = [];
-}
-
-function setStatus(text, cls = "") {
-  const el = $("apiStatus");
-  if (!el) return;
-
-  el.textContent = text;
-  el.className = "apiStatus " + cls;
-}
-
-function renderAll() {
-  const org = state.organization || {};
-  const d = state.dashboard || state.stats || {};
-
-  if ($("brandName") && org.organizationName) {
-    $("brandName").textContent = org.organizationName;
-  }
-
-  setText("totalCases", d.totalCases || d.total || state.cases.length || 0);
-  setText("todayCases", d.todayCases || 0);
-  setText("processingCases", d.processingCases || 0);
-  setText("aiFiledCases", d.aiFiledCases || d.aiFiled || 0);
-
-  renderCategories();
-  renderCases();
-  renderCitizens();
-  renderVisits();
-  renderSchedule();
-}
-
-function setText(id, value) {
-  const el = $(id);
-  if (el) el.textContent = value;
-}
-
-function renderCategories() {
-  const sel = $("caseCategory");
-  if (!sel) return;
-
-  const categories = state.categories || [];
-
-  sel.innerHTML =
-    categories.map((c) => `<option>${esc(c.categoryName)}</option>`).join("") ||
-    "<option>一般陳情</option>";
-}
-
-function renderCases() {
-  const rows = (state.cases || []).slice().reverse();
-
-  if ($("caseTable")) {
-    $("caseTable").innerHTML = table(
-      ["編號", "民眾", "分類", "標題", "地址", "急迫", "狀態"],
-      rows.map((c) => [
-        c.caseNo,
-        c.citizenName,
-        c.categoryName,
-        c.title,
-        c.address,
-        priorityBadge(c.priority),
-        statusBadge(c.status)
-      ]),
-      true
-    );
-  }
-
-  if ($("recentCases")) {
-    $("recentCases").innerHTML = table(
-      ["編號", "民眾", "分類", "狀態"],
-      rows.slice(0, 6).map((c) => [
-        c.caseNo,
-        c.citizenName,
-        c.categoryName,
-        statusBadge(c.status)
-      ]),
-      true
-    );
-  }
-}
-
-function renderCitizens() {
-  if (!$("citizenTable")) return;
-
-  $("citizenTable").innerHTML = table(
-    ["姓名", "電話", "地址", "里別", "案件數"],
-    (state.citizens || []).map((c) => [
-      c.name,
-      c.phone,
-      c.address,
-      c.village,
-      c.caseCount
-    ])
-  );
-}
-
-function renderVisits() {
-  if (!$("visitTable")) return;
-
-  $("visitTable").innerHTML = table(
-    ["日期", "對象", "地址", "里別", "內容"],
-    (state.visits || []).map((v) => [
-      v.visitDate,
-      v.citizenName,
-      v.address,
-      v.village,
-      v.summary || v.content
-    ])
-  );
-}
-
-function renderSchedule() {
-  if (!$("scheduleTable")) return;
-
-  $("scheduleTable").innerHTML = table(
-    ["日期", "時間", "標題", "地點", "狀態"],
-    (state.schedule || []).map((s) => [
-      s.startDate,
-      s.startTime,
-      s.title,
-      s.location,
-      statusBadge(s.status || "預定")
-    ]),
-    true
-  );
-}
-
-function table(headers, rows, allowHtml = false) {
-  return `
-    <thead>
-      <tr>
-        ${headers.map((h) => `<th>${esc(h)}</th>`).join("")}
-      </tr>
-    </thead>
-    <tbody>
-      ${
-        rows.length
-          ? rows
-              .map(
-                (r) => `
-                  <tr>
-                    ${r
-                      .map((v) => `<td>${allowHtml ? String(v || "") : esc(v || "")}</td>`)
-                      .join("")}
-                  </tr>
-                `
-              )
-              .join("")
-          : emptyRow(headers.length)
+      if (text.includes("新增案件")) {
+        toast("新增案件", "下一步會開啟新增案件 Modal。");
+        return;
       }
-    </tbody>
+
+      if (text.includes("新增互動")) {
+        toast("新增互動", "下一步會開啟地方互動 Modal。");
+        return;
+      }
+
+      if (text.includes("新增喪宅")) {
+        toast("新增喪宅", "下一步會開啟喪宅資料 Modal。");
+        return;
+      }
+
+      if (text.includes("新增行程")) {
+        toast("新增行程", "下一步會開啟行程 Modal。");
+        return;
+      }
+
+      if (text.includes("搜尋")) {
+        toast("搜尋", "全域搜尋功能下一階段加入。");
+        return;
+      }
+
+      if (text.includes("快速新增")) {
+        toast("快速新增", "下一階段會加入快速新增選單。");
+        return;
+      }
+    });
+  });
+}
+
+function toast(title, message = "") {
+  let box = $("toastBox");
+
+  if (!box) {
+    box = document.createElement("div");
+    box.id = "toastBox";
+    box.className = "toastBox";
+    document.body.appendChild(box);
+  }
+
+  const item = document.createElement("div");
+  item.className = "toast";
+  item.innerHTML = `
+    <b>${escapeHtml(title)}</b>
+    <span>${escapeHtml(message)}</span>
   `;
+
+  box.appendChild(item);
+
+  setTimeout(() => {
+    item.classList.add("hide");
+    setTimeout(() => item.remove(), 260);
+  }, 1800);
 }
 
-function emptyRow(colspan) {
-  return `
-    <tr>
-      <td colspan="${colspan}">
-        <div class="emptyState">
-          <b>目前尚無資料</b>
-          <span>新增第一筆資料後，會顯示在這裡。</span>
-        </div>
-      </td>
-    </tr>
-  `;
-}
-
-function statusBadge(status = "") {
-  const s = String(status || "待受理");
-
-  let cls = "badge gray";
-  let icon = "●";
-
-  if (s.includes("完成") || s.includes("結案")) {
-    cls = "badge green";
-  } else if (s.includes("處理")) {
-    cls = "badge yellow";
-  } else if (s.includes("待")) {
-    cls = "badge gray";
-  } else if (s.includes("取消")) {
-    cls = "badge red";
-  } else if (s.includes("預定")) {
-    cls = "badge blue";
-  }
-
-  return `<span class="${cls}">${icon} ${esc(s)}</span>`;
-}
-
-function priorityBadge(priority = "") {
-  const p = String(priority || "一般");
-
-  if (p.includes("非常")) {
-    return `<span class="badge red">● 非常急</span>`;
-  }
-
-  if (p.includes("急")) {
-    return `<span class="badge orange">● 急件</span>`;
-  }
-
-  return `<span class="badge gray">● 一般</span>`;
-}
-
-function esc(v) {
-  return String(v ?? "").replace(/[&<>"']/g, (m) => {
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (char) => {
     return {
       "&": "&amp;",
       "<": "&lt;",
       ">": "&gt;",
       '"': "&quot;",
       "'": "&#039;"
-    }[m];
+    }[char];
   });
-}
-
-async function createCase() {
-  const payload = {
-    citizenName: $("caseName")?.value || "",
-    phone: $("casePhone")?.value || "",
-    categoryName: $("caseCategory")?.value || "一般陳情",
-    priority: $("casePriority")?.value || "一般",
-    address: $("caseAddress")?.value || "",
-    village: $("caseVillage")?.value || "",
-    content: $("caseContent")?.value || "",
-    title: `${$("caseCategory")?.value || "一般陳情"}｜${($("caseContent")?.value || "").slice(0, 18)}`
-  };
-
-  if (!payload.citizenName && !payload.content) {
-    toast("缺少資料", "請至少輸入民眾姓名或案件內容。", "error");
-    return;
-  }
-
-  try {
-    toast("建立中", "正在新增服務案件...", "info");
-
-    const res = await apiPost("createCase", payload);
-
-    if (!res.ok) {
-      throw new Error(res.message || "新增失敗");
-    }
-
-    await loadInit();
-    clearCaseForm();
-    toast("建立成功", "服務案件已新增。", "success");
-  } catch (err) {
-    toast("新增失敗", err.message, "error");
-  }
-}
-
-function clearCaseForm() {
-  ["caseName", "casePhone", "caseAddress", "caseVillage", "caseContent"].forEach((id) => {
-    if ($(id)) $(id).value = "";
-  });
-}
-
-async function runAIFiling(autoCreateCase = true) {
-  const rawContent = $("aiInput")?.value.trim() || "";
-
-  if (!rawContent) {
-    toast("缺少內容", "請先輸入民眾陳情內容。", "error");
-    return;
-  }
-
-  showAILoading();
-
-  try {
-    const res = await apiPost("aiFiling", {
-      rawContent,
-      autoCreateCase
-    });
-
-    if (!res.ok) {
-      throw new Error(res.message || "AI 歸檔失敗");
-    }
-
-    renderAIResult(res);
-    await loadInit();
-
-    toast(
-      autoCreateCase ? "AI 已建案" : "AI 分析完成",
-      autoCreateCase ? "案件已建立並完成歸檔。" : "分析結果已產生。",
-      "success"
-    );
-  } catch (err) {
-    if ($("aiResult")) {
-      $("aiResult").textContent = "失敗：" + err.message;
-    }
-
-    toast("AI 歸檔失敗", err.message, "error");
-  }
-}
-
-function showAILoading() {
-  if (!$("aiResult")) return;
-
-  $("aiResult").textContent = `
-🤖 AI 正在分析案件...
-
-━━━━━━━━━━━━━━━━━━━━
-
-✓ 讀取民眾陳情內容
-✓ 判斷案件分類
-✓ 擷取地點與里別
-✓ 研判急迫程度
-✓ 建立案件摘要
-
-━━━━━━━━━━━━━━━━━━━━
-`;
-}
-
-function renderAIResult(res) {
-  if (!$("aiResult")) return;
-
-  const a = res.analysis || {};
-  const c = res.case || {};
-  const mode = res.mode || "local-rule";
-
-  $("aiResult").textContent = `
-🤖 AI 快速歸檔完成
-
-━━━━━━━━━━━━━━━━━━━━
-
-分析模式：
-${mode === "gemini" ? "Gemini AI" : "本機規則"}
-
-案件標題：
-${a.title || c.title || "未提供"}
-
-案件分類：
-${a.categoryName || c.categoryName || "一般陳情"}
-
-案件摘要：
-${a.summary || c.summary || c.content || "未提供"}
-
-案件地址：
-${a.address || c.address || "待補地址"}
-
-急迫程度：
-${a.priority || c.priority || "一般"}
-
-建議承辦：
-${a.departmentName || c.departmentName || "待確認"}
-
-案件編號：
-${c.caseNo || "尚未建立案件"}
-
-━━━━━━━━━━━━━━━━━━━━
-`;
-}
-
-async function createVisit() {
-  try {
-    const res = await apiPost("createVisit", {
-      citizenName: $("visitName")?.value || "",
-      address: $("visitAddress")?.value || "",
-      village: $("visitVillage")?.value || "",
-      content: $("visitContent")?.value || "",
-      summary: $("visitContent")?.value || ""
-    });
-
-    if (!res.ok) {
-      throw new Error(res.message || "新增拜訪紀錄失敗");
-    }
-
-    await loadInit();
-    toast("新增成功", "拜訪紀錄已新增。", "success");
-  } catch (err) {
-    toast("新增失敗", err.message, "error");
-  }
-}
-
-async function createSchedule() {
-  try {
-    const res = await apiPost("createSchedule", {
-      title: $("schTitle")?.value || "",
-      startDate: $("schDate")?.value || "",
-      startTime: $("schTime")?.value || "",
-      location: $("schLocation")?.value || "",
-      status: "預定"
-    });
-
-    if (!res.ok) {
-      throw new Error(res.message || "新增行程失敗");
-    }
-
-    await loadInit();
-    toast("新增成功", "行程已新增。", "success");
-  } catch (err) {
-    toast("新增失敗", err.message, "error");
-  }
-}
-
-function copyDashboardAiToMain() {
-  const quick = $("dashboardAiInput");
-  const ai = $("aiInput");
-
-  if (!quick || !ai) return;
-
-  if (!quick.value.trim()) {
-    toast("缺少內容", "請先輸入電話紀錄或民眾陳情內容。", "error");
-    return;
-  }
-
-  ai.value = quick.value;
-  showPage("ai");
-  ai.focus();
-}
-
-function ensureToastBox() {
-  if ($("toastBox")) return;
-
-  const box = document.createElement("div");
-  box.id = "toastBox";
-  box.className = "toastBox";
-  document.body.appendChild(box);
-}
-
-function toast(title, message = "", type = "info") {
-  ensureToastBox();
-
-  const item = document.createElement("div");
-  item.className = "toast " + type;
-
-  item.innerHTML = `
-    <b>${esc(title)}</b>
-    <span>${esc(message)}</span>
-  `;
-
-  $("toastBox").appendChild(item);
-
-  setTimeout(() => {
-    item.classList.add("hide");
-    setTimeout(() => item.remove(), 260);
-  }, 2800);
 }
