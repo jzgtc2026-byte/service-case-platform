@@ -720,3 +720,124 @@ code{
     margin-top:4px;
   }
 }
+
+/* ===== V2 版面爆版急救修正 ===== */
+
+.appShell{
+  display:flex;
+  min-height:100vh;
+  gap:18px;
+  padding:18px;
+  max-width:1680px;
+  margin:0 auto;
+}
+
+.appShell .sidebar{
+  width:250px;
+  flex:0 0 250px;
+}
+
+.appShell .main{
+  flex:1;
+  min-width:0;
+}
+
+.hero{
+  min-height:auto !important;
+  padding:26px !important;
+  margin-bottom:14px !important;
+  border-radius:24px;
+  background:linear-gradient(135deg,#fff,#F8F0E1);
+  border:1px solid var(--border);
+  box-shadow:var(--shadow2);
+}
+
+.hero h2{
+  margin:10px 0;
+  font-size:34px;
+  line-height:1.15;
+}
+
+.hero p{
+  max-width:780px;
+  margin:0;
+  color:var(--muted);
+  line-height:1.7;
+}
+
+.caseLayout,
+.dashboardGrid,
+.statsGrid{
+  width:100%;
+}
+
+.caseLayout{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 420px;
+  gap:14px;
+}
+
+.caseBoard,
+.caseDetail{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:19px;
+  box-shadow:var(--shadow2);
+}
+
+.filterBar{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:10px;
+  margin:14px 0;
+}
+
+.caseList{
+  display:grid;
+  gap:10px;
+}
+
+.caseItem{
+  padding:14px;
+  border:1px solid var(--border);
+  border-radius:16px;
+  background:#fff;
+}
+
+.modalOverlay{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(30,43,39,.42);
+  z-index:999;
+}
+
+.modalOverlay.active{
+  display:flex;
+}
+
+.modal,
+.modalBox{
+  width:min(720px,100%);
+  max-height:90vh;
+  overflow:auto;
+}
+
+@media(max-width:1000px){
+  .appShell{
+    display:block;
+    padding:12px;
+  }
+
+  .caseLayout{
+    grid-template-columns:1fr;
+  }
+
+  .filterBar{
+    grid-template-columns:1fr;
+  }
+}
